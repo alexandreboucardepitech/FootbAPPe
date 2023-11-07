@@ -1,19 +1,20 @@
-import pandas as pd
-import gzip
+from pymongo import MongoClient
 
-def preprocess_csv(input_file, output_file):
-    with gzip.open(input_file, 'rt') as f:
-        lines = f.readlines()
+uri = "mongodb+srv://FootbAPPe:FootbAPPé@footbappe.vnhro4y.mongodb.net/FootbAPPe"
 
-    # Filter out lines with more than one field
-    cleaned_lines = [line for line in lines if len(line.strip().split(',')) == 1]
+def database():
+    client = MongoClient(uri)
+    db = client.FootbAPPe
+    coll = db.male_players2
 
-    with open(output_file, 'w') as f:
-        f.writelines(cleaned_lines)
+    query = {
+        "club_name:string": "Manchester City",
+    }
+    cursor = coll.find(query)
 
-def read_file():
-    preprocess_csv('database/male_players.csv', 'database/cleaned_male_players.csv')
-    destinations = pd.read_csv('database/cleaned_male_players.csv')
-    print(destinations)
+    for doc in cursor:
+        print(doc)
 
-read_file()
+    client.close()
+
+database()
