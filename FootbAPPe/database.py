@@ -2,19 +2,23 @@ from pymongo import MongoClient
 
 uri = "mongodb+srv://FootbAPPe:FootbAPPé@footbappe.vnhro4y.mongodb.net/FootbAPPe"
 
-def database():
+def database_teams(query):
     client = MongoClient(uri)
     db = client.FootbAPPe
-    coll = db.male_players2
+    teams = db.teams
 
-    query = {
-        "club_name:string": "Manchester City",
-    }
-    cursor = coll.find(query)
-
-    for doc in cursor:
-        print(doc)
+    cursor = list(teams.find(query))
 
     client.close()
+    return cursor
 
-database()
+
+def database_players(query):
+    client = MongoClient(uri)
+    db = client.FootbAPPe
+    players = db.players
+
+    cursor = list(players.find(query))
+
+    client.close()
+    return cursor
