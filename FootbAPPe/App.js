@@ -1,7 +1,10 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import MainPage from "./MainPage.js";
+
+import Menu from "./Menu.js";
+import GameMenu from "./GameMenu.js";
+// import Credits from "./Credits.js";
 import GuessThePlayer from "./GuessThePlayer.js";
 import ClubFinder from "./ClubFinder.js";
 import CarrerTracer from "./CarrerTracer.js";
@@ -11,18 +14,27 @@ import ClubFinderLevel from "./ClubFinderLevel.js";
 import Starting11Level from "./Starting11Level.js";
 import GuessThePlayerLevel from "./GuessThePlayerLevel.js";
 
-
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainPage">
+      <Stack.Navigator initialRouteName="Menu">
         <Stack.Screen
-          name="MainPage"
-          component={MainPage}
+          name="Menu"
+          component={Menu}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="GameMenu"
+          component={GameMenu}
+          options={{ headerShown: false }}
+        />
+        {/* <Stack.Screen
+          name="Credits"
+          component={Credits}
+          options={{ headerShown: false }}
+        /> */}
         <Stack.Screen
           name="GuessThePlayer"
           component={GuessThePlayer}

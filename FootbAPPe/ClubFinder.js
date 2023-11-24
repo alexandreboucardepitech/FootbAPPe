@@ -20,7 +20,6 @@ export default function ClubFinder() {
   ];
 
   useEffect(() => {
-    console.log(route.params?.level);
     setActualLevel(route.params?.level);
   }, [route.params?.level]);
 

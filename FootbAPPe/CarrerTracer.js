@@ -21,7 +21,6 @@ export default function CarrerTracer() {
   ];
 
   useEffect(() => {
-    console.log(route.params?.level);
     setActualLevel(route.params?.level);
   }, [route.params?.level]);
 
