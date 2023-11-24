@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList";
+import { useRoute } from "@react-navigation/native";
 
 export default function ClubFinder() {
+  const route = useRoute();
+  const [actualLevel, setActualLevel] = useState(route.params?.level);
   const stringsArray = [
     "Zlatan Ibrahimovic",
     "Antoine Griezmann",
@@ -16,12 +19,21 @@ export default function ClubFinder() {
     "Alex Grimaldo",
   ];
 
+  useEffect(() => {
+    console.log(route.params?.level);
+    setActualLevel(route.params?.level);
+  }, [route.params?.level]);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Club Finder</Text>
       </View>
-      <LevelsList stringsArray={stringsArray} />
+      <LevelsList
+        stringsArray={stringsArray}
+        actualLevel={actualLevel}
+        redirection={"ClubFinderLevel"}
+      />
     </View>
   );
 }

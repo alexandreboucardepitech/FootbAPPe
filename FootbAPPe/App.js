@@ -7,6 +7,10 @@ import ClubFinder from "./ClubFinder.js";
 import CarrerTracer from "./CarrerTracer.js";
 import Starting11 from "./Starting11.js";
 import CarrerTracerLevel from "./CarrerTracerLevel.js";
+import ClubFinderLevel from "./ClubFinderLevel.js";
+import Starting11Level from "./Starting11Level.js";
+import GuessThePlayerLevel from "./GuessThePlayerLevel.js";
+
 
 const Stack = createStackNavigator();
 
@@ -25,8 +29,18 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="GuessThePlayerLevel"
+          component={GuessThePlayerLevel}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="ClubFinder"
           component={ClubFinder}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ClubFinderLevel"
+          component={ClubFinderLevel}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -42,6 +56,11 @@ export default function App() {
         <Stack.Screen
           name="Starting11"
           component={Starting11}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Starting11Level"
+          component={Starting11Level}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

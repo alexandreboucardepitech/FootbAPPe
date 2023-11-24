@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,10 +12,26 @@ import {
 import axios from "axios";
 import { NGROK_URL } from "@env";
 import not_found from "./assets/not_found.png";
+import LevelsList from "./LevelsList";
+import { useRoute } from "@react-navigation/native";
 
 export default function GuessThePlayer() {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const route = useRoute();
+  const [actualLevel, setActualLevel] = useState(route.params?.level);
+  const stringsArray = [
+    "Zlatan Ibrahimovic",
+    "Antoine Griezmann",
+    "Hugo Lloris",
+    "Angel Di Maria",
+    "Thiago Alcantara",
+    "Alvaro Morata",
+    "Xavi Simons",
+    "Raphaël Leao",
+    "Ludovic Blas",
+    "Alex Grimaldo",
+  ];
 
   const formatPlayerId = (playerId) => {
     while (playerId.length < 6) {
@@ -42,6 +58,11 @@ export default function GuessThePlayer() {
         console.error("Error:", error);
       });
   };
+
+  useEffect(() => {
+    console.log(route.params?.level);
+    setActualLevel(route.params?.level);
+  }, [route.params?.level]);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -84,6 +105,13 @@ export default function GuessThePlayer() {
           </View>
         )}
       </View>
+      <View style={styles.levelsContainer}>
+        <LevelsList
+          stringsArray={stringsArray}
+          actualLevel={actualLevel}
+          redirection={"GuessThePlayerLevel"}
+        />
+      </View>
     </ScrollView>
   );
 }
@@ -96,6 +124,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#008000",
     alignItems: "center",
+  },
+  levelsContainer: {
+    flex: 1,
+    backgroundColor: "#008000",
   },
   titleContainer: {
     alignItems: "center",

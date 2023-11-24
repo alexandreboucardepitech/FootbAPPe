@@ -21,7 +21,7 @@ export default function MainPage() {
           <TouchableOpacity
             style={styles.imageButton}
             onPress={() => {
-              navigation.navigate("GuessThePlayer");
+              navigation.navigate("GuessThePlayer", { level: -1 });
             }}
           >
             <Image
@@ -47,7 +47,7 @@ export default function MainPage() {
           <TouchableOpacity
             style={styles.imageButton}
             onPress={() => {
-              navigation.navigate("ClubFinder");
+              navigation.navigate("ClubFinder", { level: -1 });
             }}
           >
             <Image
@@ -59,7 +59,7 @@ export default function MainPage() {
           <TouchableOpacity
             style={styles.imageButton}
             onPress={() => {
-              navigation.navigate("Starting11");
+              navigation.navigate("Starting11", { level: -1 });
             }}
           >
             <Image
