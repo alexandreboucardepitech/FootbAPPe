@@ -2,23 +2,21 @@ import React from "react";
 import {
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import imageLocked from "./assets/locked.png";
 
-const LevelsList = ({
-  stringsArray,
-  actualLevel,
-  changeActualLevel,
-  redirection,
-}) => {
+const LevelsList = ({ stringsArray, actualLevel, redirection }) => {
   const navigation = useNavigation();
 
   const handlePress = (text, index) => {
     console.log(text);
-    navigation.navigate(redirection, { text: text, index: index });
+    if (index <= actualLevel + 1) {
+      navigation.navigate(redirection, { text: text, index: index });
+    }
   };
 
   return (
@@ -30,6 +28,12 @@ const LevelsList = ({
           onPress={() => handlePress(text, index)}
         >
           <Text>{index > actualLevel ? `Niveau ${index + 1}` : text}</Text>
+          {index > actualLevel + 1 && (
+          <Image
+            source={imageLocked}
+            style={styles.imageStyle}
+          />
+        )}
         </TouchableOpacity>
       ))}
     </ScrollView>
@@ -49,6 +53,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
     height: 100,
+  },
+  imageStyle: {
+    width: 80,
+    height: 80,
+    position: 'absolute',
+    right: 10,
   },
 });
 
