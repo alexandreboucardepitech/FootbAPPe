@@ -3,11 +3,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-// Import your image files
-import image1 from './assets/GuessThePlayer.png';
-import image2 from './assets/CarrierTracer.png';
-import image3 from './assets/ClubFinder.png';
-import image4 from './assets/Starting11.png';
+import imageGuessThePlayer from './assets/GuessThePlayer.png';
+import imageCarrierTracer from './assets/CarrierTracer.png';
+import imageClubFinder from './assets/ClubFinder.png';
+import imageStarting11 from './assets/Starting11.png';
 
 export default function MainPage() {
 
@@ -22,14 +21,14 @@ export default function MainPage() {
         <View style={styles.column}>
           <TouchableOpacity style={styles.imageButton} onPress={() => {navigation.navigate('GuessThePlayer')}}>
             <Image
-              source={image1}
+              source={imageGuessThePlayer}
               style={styles.image}
               resizeMode="contain"
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.imageButton} onPress={() => {navigation.navigate('CarrierTracer')}}>
             <Image
-              source={image2}
+              source={imageCarrierTracer}
               style={styles.image}
               resizeMode="contain"
             />
@@ -38,14 +37,14 @@ export default function MainPage() {
         <View style={styles.column}>
           <TouchableOpacity style={styles.imageButton} onPress={() => {navigation.navigate('ClubFinder')}}>
             <Image
-              source={image3}
+              source={imageClubFinder}
               style={styles.image}
               resizeMode="contain"
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.imageButton} onPress={() => {navigation.navigate('Starting11')}}>
             <Image
-              source={image4}
+              source={imageStarting11}
               style={styles.image}
               resizeMode="contain"
             />

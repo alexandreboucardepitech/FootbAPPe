@@ -9,4 +9,4 @@ NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].publi
 echo "NGROK_URL=$NGROK_URL"
 echo "NGROK_URL=$NGROK_URL" > .env
 
-expo start --tunnel
+expo start --tunnel --clear
