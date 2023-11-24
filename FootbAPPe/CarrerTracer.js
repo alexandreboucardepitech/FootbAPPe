@@ -3,9 +3,10 @@ import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList";
 import { useRoute } from "@react-navigation/native";
 
-export default function ClubFinder() {
+export default function CarrerTracer() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
+
   const stringsArray = [
     "Zlatan Ibrahimovic",
     "Antoine Griezmann",
@@ -27,12 +28,12 @@ export default function ClubFinder() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Club Finder</Text>
+        <Text style={styles.title}>Carrer Tracer</Text>
       </View>
       <LevelsList
         stringsArray={stringsArray}
         actualLevel={actualLevel}
-        redirection={"ClubFinderLevel"}
+        redirection={"CarrerTracerLevel"}
       />
     </View>
   );

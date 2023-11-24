@@ -1,15 +1,14 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-import imageGuessThePlayer from './assets/GuessThePlayer.png';
-import imageCarrierTracer from './assets/CarrierTracer.png';
-import imageClubFinder from './assets/ClubFinder.png';
-import imageStarting11 from './assets/Starting11.png';
+import imageGuessThePlayer from "./assets/GuessThePlayer.png";
+import imageCarrerTracer from "./assets/CarrerTracer.png";
+import imageClubFinder from "./assets/ClubFinder.png";
+import imageStarting11 from "./assets/Starting11.png";
 
 export default function MainPage() {
-
   const navigation = useNavigation();
 
   return (
@@ -19,30 +18,50 @@ export default function MainPage() {
       </View>
       <View style={styles.centerContainer}>
         <View style={styles.column}>
-          <TouchableOpacity style={styles.imageButton} onPress={() => {navigation.navigate('GuessThePlayer')}}>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => {
+              navigation.navigate("GuessThePlayer", { level: -1 });
+            }}
+          >
             <Image
               source={imageGuessThePlayer}
               style={styles.image}
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.imageButton} onPress={() => {navigation.navigate('CarrierTracer')}}>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => {
+              navigation.navigate("CarrerTracer", { level: -1 });
+            }}
+          >
             <Image
-              source={imageCarrierTracer}
+              source={imageCarrerTracer}
               style={styles.image}
               resizeMode="contain"
             />
           </TouchableOpacity>
         </View>
         <View style={styles.column}>
-          <TouchableOpacity style={styles.imageButton} onPress={() => {navigation.navigate('ClubFinder')}}>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => {
+              navigation.navigate("ClubFinder", { level: -1 });
+            }}
+          >
             <Image
               source={imageClubFinder}
               style={styles.image}
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.imageButton} onPress={() => {navigation.navigate('Starting11')}}>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={() => {
+              navigation.navigate("Starting11", { level: -1 });
+            }}
+          >
             <Image
               source={imageStarting11}
               style={styles.image}
@@ -59,26 +78,26 @@ export default function MainPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#008000',
+    backgroundColor: "#008000",
   },
   titleContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 50,
   },
   title: {
     fontSize: 50,
-    color: 'white',
+    color: "white",
   },
   centerContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
   column: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   image: {
     width: 250,

@@ -1,16 +1,41 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Image, ImageBackground } from 'react-native';
-import axios from 'axios';
-import {NGROK_URL} from "@env"
-import not_found from './assets/not_found.png';
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  Image,
+  ImageBackground,
+} from "react-native";
+import axios from "axios";
+import { NGROK_URL } from "@env";
+import not_found from "./assets/not_found.png";
+import LevelsList from "./LevelsList";
+import { useRoute } from "@react-navigation/native";
 
 export default function GuessThePlayer() {
   const [responseData, setResponseData] = useState(null);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
+  const route = useRoute();
+  const [actualLevel, setActualLevel] = useState(route.params?.level);
+  const stringsArray = [
+    "Zlatan Ibrahimovic",
+    "Antoine Griezmann",
+    "Hugo Lloris",
+    "Angel Di Maria",
+    "Thiago Alcantara",
+    "Alvaro Morata",
+    "Xavi Simons",
+    "Raphaël Leao",
+    "Ludovic Blas",
+    "Alex Grimaldo",
+  ];
 
   const formatPlayerId = (playerId) => {
     while (playerId.length < 6) {
-      playerId = "0" + playerId
+      playerId = "0" + playerId;
     }
     const firstThree = playerId.substring(0, 3);
     const lastThree = playerId.substring(playerId.length - 3);
@@ -22,16 +47,22 @@ export default function GuessThePlayer() {
     axios
       .get(`${NGROK_URL}/api/player/${searchText}`, {
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }})
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
         setResponseData(response.data);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
   };
+
+  useEffect(() => {
+    console.log(route.params?.level);
+    setActualLevel(route.params?.level);
+  }, [route.params?.level]);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -59,13 +90,13 @@ export default function GuessThePlayer() {
                 <Text style={styles.playerText}>
                   Player {index + 1}: {player.short_name}
                 </Text>
-                <ImageBackground
-                  style={styles.playerImage}
-                  source={not_found}>
+                <ImageBackground style={styles.playerImage} source={not_found}>
                   <Image
                     style={styles.playerImage}
                     source={{
-                      uri: `https://cdn.sofifa.net/players/${formatPlayerId(player.player_id.toString())}/24_120.png`
+                      uri: `https://cdn.sofifa.net/players/${formatPlayerId(
+                        player.player_id.toString()
+                      )}/24_120.png`,
                     }}
                   />
                 </ImageBackground>
@@ -73,6 +104,13 @@ export default function GuessThePlayer() {
             ))}
           </View>
         )}
+      </View>
+      <View style={styles.levelsContainer}>
+        <LevelsList
+          stringsArray={stringsArray}
+          actualLevel={actualLevel}
+          redirection={"GuessThePlayerLevel"}
+        />
       </View>
     </ScrollView>
   );
@@ -84,37 +122,41 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#008000',
-    alignItems: 'center',
+    backgroundColor: "#008000",
+    alignItems: "center",
+  },
+  levelsContainer: {
+    flex: 1,
+    backgroundColor: "#008000",
   },
   titleContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 50,
   },
   title: {
     fontSize: 50,
-    color: 'white',
+    color: "white",
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     padding: 10,
     borderRadius: 5,
     marginTop: 20,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   responseContainer: {
     marginTop: 20,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 5,
   },
   responseText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   responseData: {
     marginTop: 10,
@@ -122,7 +164,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
@@ -131,6 +173,6 @@ const styles = StyleSheet.create({
   playerImage: {
     width: 60,
     height: 60,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
 });
