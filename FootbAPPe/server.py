@@ -10,7 +10,6 @@ def get_team_name_players(team_name):
     """
     Retrieve and return a list of the players of a specific team. (data is the same as in the 'get_player' route)
     """
-    print("coucou")
     players = database_players({"club_name:string": team_name})
     players_list = []
     for player in players:
@@ -25,7 +24,6 @@ def get_team_players(id):
     """
     Retrieve and return a list of the players of a specific team. (data is the same as in the 'get_player' route)
     """
-    print("salut")
     players = database_players({"club_team_id:int32": id})
     players_list = []
     for player in players:
@@ -89,8 +87,6 @@ def get_players_name(name):
     players = database_players(query)[:30]
     players_list = []
     for player in players:
-        # team = database_teams({"team_id:int32": player["club_team_id:int32"]})[0]
-        # print("team : ", team)
         data = {"player_id": player["player_id:int32"], "player_url": player["player_url:string"], "short_name": player["short_name:string"], "long_name": player["long_name:string"], "player_positions": player["player_positions:string"], "overall": player["overall:int32"], "potential": player["potential:int32"], "age": player["age:int32"], "dob": player["dob:date"], "height_cm": player["height_cm:int32"], "weight_kg": player["weight_kg:int32"], "club_team_id": player["club_team_id:int32"], "club_name": player["club_name:string"], "league_id": player["league_id:int32"], "league_name": player["league_name:string"], "league_level": player["league_level:int32"], "club_jersey_number": player["club_jersey_number:int32"], "club_joined_date": player["club_joined_date:date"], "nationality_id": player["nationality_id:int32"], "nationality_name": player["nationality_name:string"], "nation_team_id": player["nation_team_id:int32"], "preferred_foot": player["preferred_foot:string"], "weak_foot": player["weak_foot:int32"], "skill_moves": player["skill_moves:int32"], "international_reputation": player["international_reputation:int32"], "work_rate": player["work_rate:string"], "pace": player["pace:int32"], "shooting": player["shooting:int32"], "passing": player["passing:int32"], "dribbling": player["dribbling:int32"], "defending": player["defending:int32"], "physic": player["physic:int32"]}
         players_list.append(data)
         print(data, "\n\n\n")
