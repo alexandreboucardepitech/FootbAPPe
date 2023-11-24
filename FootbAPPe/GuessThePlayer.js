@@ -60,7 +60,6 @@ export default function GuessThePlayer() {
   };
 
   useEffect(() => {
-    console.log(route.params?.level);
     setActualLevel(route.params?.level);
   }, [route.params?.level]);
 

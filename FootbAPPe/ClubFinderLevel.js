@@ -10,7 +10,6 @@ export default function ClubFinderLevel() {
   const player = route.params?.text;
 
   const handlePress = (level) => {
-    console.log("FINISH");
     navigation.navigate("ClubFinder", { level: level - 1 });
   };
 

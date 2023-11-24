@@ -10,7 +10,6 @@ export default function CarrerTracerLevel() {
   const player = route.params?.text;
 
   const handlePress = (level) => {
-    console.log("FINISH");
     navigation.navigate("CarrerTracer", { level: level - 1 });
   };
 
