@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Function to clean up resources and exit
+cleanup() {
+  echo "Cleaning up..."
+  pkill ngrok
+  exit
+}
+
+# Set up trap to catch Ctrl+C
+trap cleanup INT
+
 ngrok http 5002 > /dev/null &
 
 sleep 1
