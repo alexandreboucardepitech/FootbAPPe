@@ -2,17 +2,17 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Menu from "./Menu.js";
-import GameMenu from "./GameMenu.js";
-import Credits from "./Credits.js";
-import GuessThePlayer from "./GuessThePlayer.js";
-import ClubFinder from "./ClubFinder.js";
-import CarrerTracer from "./CarrerTracer.js";
-import Starting11 from "./Starting11.js";
-import CarrerTracerLevel from "./CarrerTracerLevel.js";
-import ClubFinderLevel from "./ClubFinderLevel.js";
-import Starting11Level from "./Starting11Level.js";
-import GuessThePlayerLevel from "./GuessThePlayerLevel.js";
+import Menu from "./app/Menu.js";
+import GameMenu from "./app/GameMenu.js";
+import Credits from "./app/Credits.js";
+import GuessThePlayer from "./app/games/GuessThePlayer.js";
+import ClubFinder from "./app/games/ClubFinder.js";
+import CarrerTracer from "./app/games/CarrerTracer.js";
+import Starting11 from "./app/games/Starting11.js";
+import CarrerTracerLevel from "./app/games/CarrerTracerLevel.js";
+import ClubFinderLevel from "./app/games/ClubFinderLevel.js";
+import Starting11Level from "./app/games/Starting11Level.js";
+import GuessThePlayerLevel from "./app/games/GuessThePlayerLevel.js";
 
 const Stack = createStackNavigator();
 
