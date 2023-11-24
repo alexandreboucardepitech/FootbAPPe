@@ -3,9 +3,10 @@ import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList";
 import { useRoute } from "@react-navigation/native";
 
-export default function Starting11() {
+export default function CarrerTracer() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
+
   const stringsArray = [
     "Zlatan Ibrahimovic",
     "Antoine Griezmann",
@@ -26,11 +27,13 @@ export default function Starting11() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Starting 11</Text>
+        <Text style={styles.title}>Carrer Tracer</Text>
       </View>
-      <LevelsList stringsArray={stringsArray}
-      actualLevel={actualLevel}
-      redirection={"Starting11Level"}/>
+      <LevelsList
+        stringsArray={stringsArray}
+        actualLevel={actualLevel}
+        redirection={"CarrerTracerLevel"}
+      />
     </View>
   );
 }
