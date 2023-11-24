@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Menu from "./Menu.js";
 import GameMenu from "./GameMenu.js";
-// import Credits from "./Credits.js";
+import Credits from "./Credits.js";
 import GuessThePlayer from "./GuessThePlayer.js";
 import ClubFinder from "./ClubFinder.js";
 import CarrerTracer from "./CarrerTracer.js";
@@ -30,11 +30,11 @@ export default function App() {
           component={GameMenu}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Credits"
           component={Credits}
           options={{ headerShown: false }}
-        /> */}
+        />
         <Stack.Screen
           name="GuessThePlayer"
           component={GuessThePlayer}
