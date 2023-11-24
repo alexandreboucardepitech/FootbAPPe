@@ -1,42 +1,33 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import LevelsList from "./LevelsList";
 
 export default function CarrierTracer() {
   const stringsArray = [
-    'Zlatan Ibrahimovic',
-    'Antoine Griezmann',
-    'Hugo Lloris',
-    'Angel Di Maria',
-    'Thiago Alcantara',
-    'Alvaro Morata',
-    'Xavi Simons',
-    'Raphaël Leao',
-    'Ludovic Blas',
-    ' Alex Grimaldo',
+    "Zlatan Ibrahimovic",
+    "Antoine Griezmann",
+    "Hugo Lloris",
+    "Angel Di Maria",
+    "Thiago Alcantara",
+    "Alvaro Morata",
+    "Xavi Simons",
+    "Raphaël Leao",
+    "Ludovic Blas",
+    "Alex Grimaldo",
   ];
-
-  const handlePress = (text) => {
-    console.log(text); // Display text in the console
-  };
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Carrier Tracer</Text>
       </View>
-
-      {/* Mapping through the stringsArray */}
-      <ScrollView>
-        {stringsArray.map((text, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.touchableOpacity}
-            onPress={() => handlePress(text)}
-          >
-            <Text>{text}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      <LevelsList stringsArray={stringsArray} />
     </View>
   );
 }
@@ -44,22 +35,22 @@ export default function CarrierTracer() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#008000',
+    backgroundColor: "#008000",
   },
   titleContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 50,
   },
   title: {
     fontSize: 50,
-    color: 'white',
+    color: "white",
   },
   touchableOpacity: {
-    backgroundColor: '#B3EFB2',
+    backgroundColor: "#B3EFB2",
     padding: 10,
     margin: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 10,
     height: 100,
   },
