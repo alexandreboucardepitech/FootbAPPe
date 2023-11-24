@@ -1,14 +1,10 @@
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList";
 
 export default function CarrierTracer() {
+  const [actualLevel, setActualLevel] = useState(-1);
+
   const stringsArray = [
     "Zlatan Ibrahimovic",
     "Antoine Griezmann",
@@ -27,7 +23,11 @@ export default function CarrierTracer() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Carrier Tracer</Text>
       </View>
-      <LevelsList stringsArray={stringsArray} />
+      <LevelsList
+        stringsArray={stringsArray}
+        actualLevel={actualLevel}
+        setActualLevel={setActualLevel}
+      />
     </View>
   );
 }
