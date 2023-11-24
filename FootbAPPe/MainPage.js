@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import imageGuessThePlayer from "./assets/GuessThePlayer.png";
-import imageCarrierTracer from "./assets/CarrierTracer.png";
+import imageCarrerTracer from "./assets/CarrerTracer.png";
 import imageClubFinder from "./assets/ClubFinder.png";
 import imageStarting11 from "./assets/Starting11.png";
 
@@ -33,11 +33,11 @@ export default function MainPage() {
           <TouchableOpacity
             style={styles.imageButton}
             onPress={() => {
-              navigation.navigate("CarrierTracer");
+              navigation.navigate("CarrerTracer", { level: -1 });
             }}
           >
             <Image
-              source={imageCarrierTracer}
+              source={imageCarrerTracer}
               style={styles.image}
               resizeMode="contain"
             />

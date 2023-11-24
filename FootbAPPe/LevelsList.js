@@ -6,11 +6,19 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const LevelsList = ({ stringsArray, actualLevel, setActualLevel }) => {
+const LevelsList = ({
+  stringsArray,
+  actualLevel,
+  changeActualLevel,
+  redirection,
+}) => {
+  const navigation = useNavigation();
+
   const handlePress = (text, index) => {
     console.log(text);
-    setActualLevel(index);
+    navigation.navigate(redirection, { text: text, index: index });
   };
 
   return (

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList";
+import { useRoute } from "@react-navigation/native";
 
-export default function CarrierTracer() {
-  const [actualLevel, setActualLevel] = useState(-1);
+export default function CarrerTracer() {
+  const route = useRoute();
+  const [actualLevel, setActualLevel] = useState(route.params?.level);
 
   const stringsArray = [
     "Zlatan Ibrahimovic",
@@ -18,15 +20,20 @@ export default function CarrierTracer() {
     "Alex Grimaldo",
   ];
 
+  useEffect(() => {
+    console.log(route.params?.level);
+    setActualLevel(route.params?.level);
+  }, [route.params?.level]);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Carrier Tracer</Text>
+        <Text style={styles.title}>Carrer Tracer</Text>
       </View>
       <LevelsList
         stringsArray={stringsArray}
         actualLevel={actualLevel}
-        setActualLevel={setActualLevel}
+        redirection={"CarrerTracerLevel"}
       />
     </View>
   );
@@ -44,14 +51,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 50,
     color: "white",
-  },
-  touchableOpacity: {
-    backgroundColor: "#B3EFB2",
-    padding: 10,
-    margin: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-    height: 100,
   },
 });
