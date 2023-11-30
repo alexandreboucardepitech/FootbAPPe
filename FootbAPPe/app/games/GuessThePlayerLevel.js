@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import { ScrollView } from "react-native-gesture-handler";
+import { NGROK_URL } from "@env";
+import axios from "axios";
 
 export default function ClubFinderLevel() {
   const navigation = useNavigation();
   const route = useRoute();
 
   const [guesses, setGuesses] = useState([]);
+  const [playerToGuess, setPlayerToGuess] = useState(null);
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
@@ -17,19 +20,61 @@ export default function ClubFinderLevel() {
     navigation.navigate("GuessThePlayer", { level: level - 1 });
   };
 
+  const getPlayerToGuess = (playerId) => {
+    console.log("request /", NGROK_URL);
+    axios
+      .get(`${NGROK_URL}/api/player/${playerId}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setPlayerToGuess(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  useEffect(() => {
+    getPlayerToGuess(route.params?.text);
+  }, [route.params?.text]);
+
   const renderCircles = (guess) => {
     const circles = [];
-    for (let i = 0; i < 5; i++) {
+    const playerToGuessValues = [
+      playerToGuess.nationality_name,
+      playerToGuess.league_name,
+      playerToGuess.club_name,
+      playerToGuess.player_positions,
+      playerToGuess.age,
+      playerToGuess.club_jersey_number,
+    ];
+    const playerValues = [
+      guess.nationality_name,
+      guess.league_name,
+      guess.club_name,
+      guess.player_positions,
+      guess.age,
+      guess.club_jersey_number,
+    ];
+    for (let i = 0; i < 4; i++) {
+      const dynamicFontSize = Math.max(10, 20 - (playerValues[i].length * 2));
       circles.push(
         <View
           key={i}
           style={[
             styles.circle,
-            player == guess.player_id
+            playerToGuessValues[i] == playerValues[i]
               ? styles.activeCircle
               : styles.inactiveCircle,
           ]}
-        ></View>
+        >
+          <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
+            {playerValues[i]}
+          </Text>
+        </View>
       );
     }
     return circles;
@@ -101,21 +146,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   circle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    margin: 10,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 5,
+  },
+  circleText: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   activeCircle: {
     backgroundColor: "green",
   },
   inactiveCircle: {
     backgroundColor: "red",
-  },textAndCircleContainer: {
-    alignItems: 'center',
+  },
+  textAndCircleContainer: {
+    alignItems: "center",
   },
   textAboveCircle: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 5,
   },
 });
