@@ -8,7 +8,7 @@ export default function CarrerTracer() {
   const [actualLevel, setActualLevel] = useState(route.params?.level);
 
   const stringsArray = [
-    "Zlatan Ibrahimovic",
+    "Karim Benzema",
     "Antoine Griezmann",
     "Hugo Lloris",
     "Angel Di Maria",

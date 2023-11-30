@@ -7,7 +7,7 @@ export default function ClubFinder() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
   const stringsArray = [
-    "Zlatan Ibrahimovic",
+    "Karim Benzema",
     "Antoine Griezmann",
     "Hugo Lloris",
     "Angel Di Maria",

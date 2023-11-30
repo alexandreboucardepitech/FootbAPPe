@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import SearchPlayer from "./SearchPlayer.js";
 
 export default function ClubFinderLevel() {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const [guess, setGuess] = useState(-1)
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
@@ -18,14 +21,18 @@ export default function ClubFinderLevel() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{`Guess the player : Niveau ${index}`}</Text>
         <Text>{`Player : ${player}`}</Text>
+        <Text>{`Guess : ${guess}`}</Text>
       </View>
-      <TouchableOpacity
-        key={index}
-        style={styles.touchableOpacity}
-        onPress={() => handlePress(index)}
-      >
-        <Text>FINISH</Text>
-      </TouchableOpacity>
+      <SearchPlayer setGuess={setGuess} />
+      {player == guess && (
+        <TouchableOpacity
+          key={index}
+          style={styles.touchableOpacity}
+          onPress={() => handlePress(index)}
+        >
+          <Text>FINISH</Text>
+        </TouchableOpacity>
+        )}
     </View>
   );
 }
@@ -40,7 +47,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   title: {
-    fontSize: 50,
+    fontSize: 20,
     color: "white",
   },
   touchableOpacity: {
