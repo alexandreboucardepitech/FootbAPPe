@@ -6,6 +6,18 @@ import { useRoute } from "@react-navigation/native";
 export default function Starting11() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
+  const idArray = [
+    165153, //Karim Benzema
+    194765, //Antoine Griezmann
+    167948, //Hugo Lloris
+    183898, //Di Maria
+    189509, //Thiago Alcantara
+    201153, //Alvaro Morata
+    245367, //Xavi Simons
+    241721, //Rafael Leao
+    231102, //Ludovic Blas
+    210035, //Alex Grimaldo
+  ];
   const stringsArray = [
     "Karim Benzema",
     "Antoine Griezmann",
@@ -28,9 +40,12 @@ export default function Starting11() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Starting 11</Text>
       </View>
-      <LevelsList stringsArray={stringsArray}
-      actualLevel={actualLevel}
-      redirection={"Starting11Level"}/>
+      <LevelsList
+        idArray={idArray}
+        stringsArray={stringsArray}
+        actualLevel={actualLevel}
+        redirection={"Starting11Level"}
+      />
     </View>
   );
 }
