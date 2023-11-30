@@ -9,7 +9,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import imageLocked from "../../assets/locked.png";
 
-const LevelsList = ({ stringsArray, actualLevel, redirection }) => {
+const LevelsList = ({ stringsArray, idArray, actualLevel, redirection }) => {
   const navigation = useNavigation();
 
   const handlePress = (text, index) => {
@@ -20,13 +20,13 @@ const LevelsList = ({ stringsArray, actualLevel, redirection }) => {
 
   return (
     <ScrollView>
-      {stringsArray.map((text, index) => (
+      {idArray.map((text, index) => (
         <TouchableOpacity
           key={index}
           style={styles.touchableOpacity}
           onPress={() => handlePress(text, index)}
         >
-          <Text>{index > actualLevel ? `Niveau ${index + 1}` : text}</Text>
+          <Text>{index > actualLevel ? `Niveau ${index + 1}` : stringsArray[index]}</Text>
           {index > actualLevel + 1 && (
           <Image
             source={imageLocked}
