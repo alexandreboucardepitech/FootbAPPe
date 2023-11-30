@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
@@ -7,16 +8,29 @@ export default function ClubFinder() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
   const stringsArray = [
-    "Karim Benzema",
-    "Antoine Griezmann",
-    "Hugo Lloris",
-    "Angel Di Maria",
-    "Thiago Alcantara",
-    "Alvaro Morata",
-    "Xavi Simons",
-    "Raphaël Leao",
-    "Ludovic Blas",
-    "Alex Grimaldo",
+    "Messi",
+    "Bellingham",
+    "Onana",
+    "Kvaratskhelia",
+    "Mkhitaryan",
+    "Szoboszlai",
+    "Paqueta",
+    "Clauss",
+    "Ndidi",
+    "Pallois",
+  ];
+
+  const idArray = [
+    165153, //Karim Benzema
+    194765, //Antoine Griezmann
+    167948, //Hugo Lloris
+    183898, //Di Maria
+    189509, //Thiago Alcantara
+    201153, //Alvaro Morata
+    245367, //Xavi Simons
+    241721, //Rafael Leao
+    231102, //Ludovic Blas
+    210035, //Alex Grimaldo
   ];
 
   useEffect(() => {
@@ -32,7 +46,9 @@ export default function ClubFinder() {
         stringsArray={stringsArray}
         actualLevel={actualLevel}
         redirection={"ClubFinderLevel"}
+        idArray={idArray}
       />
+      <StatusBar style="auto" />
     </View>
   );
 }

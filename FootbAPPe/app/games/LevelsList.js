@@ -24,7 +24,7 @@ const LevelsList = ({ stringsArray, idArray, actualLevel, redirection }) => {
         <TouchableOpacity
           key={index}
           style={styles.touchableOpacity}
-          onPress={() => handlePress(text, index)}
+          onPress={() => handlePress(stringsArray[index], index)}
         >
           <Text>{index > actualLevel ? `Niveau ${index + 1}` : stringsArray[index]}</Text>
           {index > actualLevel + 1 && (

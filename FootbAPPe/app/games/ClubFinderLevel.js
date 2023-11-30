@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
 export default function ClubFinderLevel() {
@@ -13,19 +20,55 @@ export default function ClubFinderLevel() {
     navigation.navigate("ClubFinder", { level: level - 1 });
   };
 
+  const circles = Array.from(
+    { length: player.length },
+    (_, index) => index + 1
+  );
+
+  const [inputText, setInputText] = useState("");
+  const isSameLength = player.length === inputText.length;
+
+  const [nbLineOfCircles, setNbLineOfCircles] = useState(1);
+
+  const circleLine = () => {
+    const lines = [];
+    for (let i = 0; i < nbLineOfCircles; i++) {
+      lines.push(
+        <View key={i} style={styles.line}>
+          {circles.map((index) => (
+            <View key={index} style={styles.circle} />
+          ))}
+        </View>
+      );
+    }
+    return lines;
+  };
+
+  const resetInput = () => {
+    setInputText("");
+    setNbLineOfCircles((prev) => prev + 1);
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Club Finder : Niveau ${index}`}</Text>
-        <Text>{`Player : ${player}`}</Text>
-      </View>
+      <Text>{player}</Text>
+      <TextInput
+        placeholder="Enter your name"
+        value={inputText}
+        onChangeText={(text) => setInputText(text)}
+        clearTextOnFocus={true}
+      />
+
+      {circleLine()}
+      {isSameLength && <Text style={styles.sameLengthText}>SAME LENGTH</Text>}
       <TouchableOpacity
         key={index}
         style={styles.touchableOpacity}
-        onPress={() => handlePress(index)}
+        onPress={() => resetInput()}
       >
         <Text>FINISH</Text>
       </TouchableOpacity>
+      <StatusBar style="auto" />
     </View>
   );
 }
@@ -34,14 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#008000",
-  },
-  titleContainer: {
-    alignItems: "center",
     marginTop: 50,
-  },
-  title: {
-    fontSize: 50,
-    color: "white",
   },
   touchableOpacity: {
     backgroundColor: "#B3EFB2",
@@ -51,5 +87,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
     height: 100,
+  },
+  line: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "white",
+    margin: 5,
+  },
+  sameLengthText: {
+    color: "white",
+    textAlign: "center",
+    marginTop: 10,
+    fontSize: 20,
   },
 });
