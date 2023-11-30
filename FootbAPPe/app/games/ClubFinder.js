@@ -7,18 +7,6 @@ import { useRoute } from "@react-navigation/native";
 export default function ClubFinder() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
-  const idArray = [
-    165153, //Karim Benzema
-    194765, //Antoine Griezmann
-    167948, //Hugo Lloris
-    183898, //Di Maria
-    189509, //Thiago Alcantara
-    201153, //Alvaro Morata
-    245367, //Xavi Simons
-    241721, //Rafael Leao
-    231102, //Ludovic Blas
-    210035, //Alex Grimaldo
-  ];
   const stringsArray = [
     "Messi",
     "Bellingham",
@@ -59,7 +47,6 @@ export default function ClubFinder() {
         stringsArray={stringsArray}
         actualLevel={actualLevel}
         redirection={"ClubFinderLevel"}
-        idArray={idArray}
       />
       <StatusBar style="auto" />
     </View>
