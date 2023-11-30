@@ -13,7 +13,7 @@ import {
     ScrollView
   } from "react-native";
 
-const SearchPlayer = ({setGuess}) => {
+const SearchPlayer = ({setGuesses, guesses}) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -30,7 +30,7 @@ const SearchPlayer = ({setGuess}) => {
     console.log(player.player_id)
     console.log(player.short_name)
     console.log("")
-    setGuess(player.player_id)
+    setGuesses([...guesses, player])
   };
 
   const fetchData = () => {
