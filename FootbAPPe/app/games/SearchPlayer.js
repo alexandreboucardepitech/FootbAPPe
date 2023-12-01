@@ -30,7 +30,9 @@ const SearchPlayer = ({setGuesses, guesses}) => {
     console.log(player.player_id)
     console.log(player.short_name)
     console.log("")
-    setGuesses([...guesses, player])
+    if (!guesses.includes(player)) {
+      setGuesses([...guesses, player])
+    }
   };
 
   const fetchData = () => {
