@@ -13,7 +13,7 @@ import {
     ScrollView
   } from "react-native";
 
-const SearchPlayer = ({setGuesses, guesses}) => {
+const SearchPlayer = ({setGuesses, guesses, addTeamLogo}) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -29,6 +29,7 @@ const SearchPlayer = ({setGuesses, guesses}) => {
   const handlePress = (player) => {
     if (!guesses.includes(player)) {
       setGuesses([...guesses, player])
+      addTeamLogo(player)
     }
   };
 
