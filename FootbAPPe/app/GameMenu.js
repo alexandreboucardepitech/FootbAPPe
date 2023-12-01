@@ -13,7 +13,7 @@ import { StatusBar } from "expo-status-bar";
 import backgroundGame from "../assets/backgroundGame.jpg";
 import imageGuessThePlayer from "../assets/GuessThePlayer.png";
 import imageCarrerTracer from "../assets/CarrerTracer.png";
-import imageClubFinder from "../assets/ClubFinder.png";
+import imageGuessPlayerName from "../assets/GuessPlayerName.png";
 import imageStarting11 from "../assets/Starting11.png";
 
 export default function GameMenu() {
@@ -59,11 +59,11 @@ export default function GameMenu() {
             <TouchableOpacity
               style={styles.imageButton}
               onPress={() => {
-                navigation.navigate("ClubFinder", { level: -1 });
+                navigation.navigate("GuessPlayerName", { level: -1 });
               }}
             >
               <Image
-                source={imageClubFinder}
+                source={imageGuessPlayerName}
                 style={styles.gameLogo}
                 resizeMode="contain"
               />

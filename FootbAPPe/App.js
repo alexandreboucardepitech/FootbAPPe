@@ -6,11 +6,11 @@ import Menu from "./app/Menu.js";
 import GameMenu from "./app/GameMenu.js";
 import Credits from "./app/Credits.js";
 import GuessThePlayer from "./app/games/GuessThePlayer.js";
-import ClubFinder from "./app/games/ClubFinder.js";
+import GuessPlayerName from "./app/games/GuessPlayerName.js";
 import CarrerTracer from "./app/games/CarrerTracer.js";
 import Starting11 from "./app/games/Starting11.js";
 import CarrerTracerLevel from "./app/games/CarrerTracerLevel.js";
-import ClubFinderLevel from "./app/games/ClubFinderLevel.js";
+import GuessPlayerNameLevel from "./app/games/GuessPlayerNameLevel.js";
 import Starting11Level from "./app/games/Starting11Level.js";
 import GuessThePlayerLevel from "./app/games/GuessThePlayerLevel.js";
 
@@ -46,13 +46,13 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="ClubFinder"
-          component={ClubFinder}
+          name="GuessPlayerName"
+          component={GuessPlayerName}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="ClubFinderLevel"
-          component={ClubFinderLevel}
+          name="GuessPlayerNameLevel"
+          component={GuessPlayerNameLevel}
           options={{ headerShown: false }}
         />
         <Stack.Screen
