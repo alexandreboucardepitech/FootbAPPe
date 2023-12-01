@@ -31,7 +31,6 @@ export default function GuessPlayerNameLevel() {
       })
       .then((response) => {
         setPlayerToGuess(response.data);
-        console.log("ici", playerToGuess, response.data, playerId);
       })
       .catch((error) => {
         console.error("Error:", error);
