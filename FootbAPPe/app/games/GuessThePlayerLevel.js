@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import { ScrollView } from "react-native-gesture-handler";
@@ -11,6 +11,7 @@ export default function GuessPlayerNameLevel() {
   const route = useRoute();
 
   const [guesses, setGuesses] = useState([]);
+  const [teamGuesses, setTeamGuesses] = useState([]);
   const [playerToGuess, setPlayerToGuess] = useState(null);
 
   const index = route.params?.index + 1;
@@ -37,29 +38,49 @@ export default function GuessPlayerNameLevel() {
       });
   };
 
+  const addTeamLogo = (player) => {
+    axios
+      .get(`${NGROK_URL}/api/team/${player.club_team_id}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setTeamGuesses([...teamGuesses, response.data.logo_url]);
+        console.log(
+          "la",
+          response.data,
+          response.data.logo_url,
+          `https://cdn.sofifa.net${response.data.logo_url}`
+        );
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
   }, [route.params?.text]);
 
-  useEffect(() => {
-  }, [playerToGuess]);
+  useEffect(() => {}, [playerToGuess]);
 
-  const getStyle = (playerPos, guessPos) => {
+  const getCircleColor = (playerPos, guessPos) => {
     if (playerPos == guessPos) {
       return styles.greenCircle;
     }
-    const playerAllPos = playerPos.split(', ')
-    const guessAllPos = guessPos.split(', ')
+    const playerAllPos = playerPos.split(", ");
+    const guessAllPos = guessPos.split(", ");
     for (let i = 0; i < playerAllPos.length; i++) {
       for (let j = 0; j < guessAllPos.length; j++) {
-        if (playerAllPos[i] == guessAllPos[j])
-          return styles.orangeCircle;
+        if (playerAllPos[i] == guessAllPos[j]) return styles.orangeCircle;
       }
     }
     return styles.redCircle;
-  }
+  };
 
-  const renderCircles = (guess) => {
+  const renderCircles = (guess, playerIndex) => {
     const circles = [];
     const playerToGuessValues = [
       playerToGuess.nationality_name,
@@ -76,14 +97,14 @@ export default function GuessPlayerNameLevel() {
       guess.age.toString(),
     ];
     for (let i = 0; i < playerToGuessValues.length; i++) {
-      dynamicFontSize = Math.max(10, 20 - (playerValues[i].length * 2));
+      dynamicFontSize = Math.max(10, 20 - playerValues[i].length * 2);
       if (i == 3) {
         circles.push(
           <View
             key={i}
             style={[
               styles.circle,
-              getStyle(playerToGuessValues[i], playerValues[i])
+              getCircleColor(playerToGuessValues[i], playerValues[i]),
             ]}
           >
             <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
@@ -102,9 +123,18 @@ export default function GuessPlayerNameLevel() {
                 : styles.redCircle,
             ]}
           >
-            <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
-              {playerValues[i]}
-            </Text>
+            {i !== 2 || teamGuesses[playerIndex] == "" ? (
+              <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
+                {playerValues[i]}
+              </Text>
+            ) : (
+              <Image
+                source={{
+                  uri: `https://cdn.sofifa.net${teamGuesses[playerIndex]}`,
+                }}
+                style={{ width: 40, height: 40 }}
+              />
+            )}
           </View>
         );
       }
@@ -115,16 +145,24 @@ export default function GuessPlayerNameLevel() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Guess the player : Niveau ${index}`}</Text>
+        <Text
+          style={styles.title}
+        >{`https://cdn.sofifa.net${teamGuesses[0]}`}</Text>
         <Text>{`Player : ${player}`}</Text>
       </View>
-      <SearchPlayer setGuesses={setGuesses} guesses={guesses} />
+      <SearchPlayer
+        setGuesses={setGuesses}
+        guesses={guesses}
+        addTeamLogo={addTeamLogo}
+      />
       <ScrollView>
         {guesses.map((guess, index) => (
           <View key={index} style={styles.guess}>
             <View style={styles.textAndCircleContainer}>
               <Text style={styles.textAboveCircle}>{guess.short_name}</Text>
-              <View style={styles.circleContainer}>{renderCircles(guess)}</View>
+              <View style={styles.circleContainer}>
+                {renderCircles(guess, index)}
+              </View>
             </View>
           </View>
         ))}
@@ -181,13 +219,13 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     margin: 7,
   },
   circleText: {
-    textAlign: 'center',
-    textAlignVertical: 'center',
+    textAlign: "center",
+    textAlignVertical: "center",
   },
   greenCircle: {
     backgroundColor: "green",
