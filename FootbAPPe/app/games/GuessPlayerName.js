@@ -21,16 +21,16 @@ export default function GuessPlayerName() {
   // ];
 
   const stringsArray = [
-    "a",
-    "az",
-    "aze",
-    "azer",
-    "azert",
-    "azerty",
-    "azertyu",
-    "azertyui",
-    "azertyuio",
-    "azertyuiop",
+    "1",
+    "22",
+    "333",
+    "4444",
+    "55555",
+    "666666",
+    "7777777",
+    "88888888",
+    "999999999",
+    "1010101010",
   ];
 
   const idArray = [

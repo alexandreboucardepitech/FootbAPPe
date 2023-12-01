@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Dimensions } from "react-native";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -16,27 +15,29 @@ export default function GuessPlayerNameLevel() {
   const isSameLength = player.length === inputText.length;
   const isSameText = player === inputText;
   const [nbLineOfCircles, setNbLineOfCircles] = useState(1);
-  const windowWidth = Dimensions.get("window").width;
-  const circlePadding = 0;
-  const circleMargin = 10;
 
   const circles = Array.from(
     { length: player.length },
     (_, index) => index + 1
   );
 
+  const maxCircleSize = 40;
+  const minCircleSize = 25;
+
+  const calculateCircleSize = () => {
+    const numCircles = Math.min(10, player.length);
+
+    if (player.length <= 6) {
+      return maxCircleSize;
+    } else {
+      const dynamicSize =
+        maxCircleSize -
+        ((maxCircleSize - minCircleSize) / (10 - 6)) * (numCircles - 6);
+      return Math.max(minCircleSize, dynamicSize);
+    }
+  };
+
   const circleLine = () => {
-    const wordLength = player.length;
-    const maxCirclesPerLine = Math.floor(
-      (windowWidth - circlePadding) / (20 + circlePadding + 2 * circleMargin)
-    );
-
-    const circleSize =
-      (windowWidth - circlePadding) / maxCirclesPerLine / (wordLength / 6);
-
-    const availableWidth =
-      windowWidth - circlePadding * (maxCirclesPerLine + 1);
-
     const lines = [];
     for (let i = 0; i < nbLineOfCircles; i++) {
       lines.push(
@@ -44,7 +45,13 @@ export default function GuessPlayerNameLevel() {
           {circles.map((circleIndex) => (
             <View
               key={circleIndex}
-              style={checkColorCircle(i, circleIndex, circleSize)}
+              style={{
+                ...checkColorCircle(i, circleIndex),
+                width: calculateCircleSize(),
+                height: calculateCircleSize(),
+                borderRadius: calculateCircleSize() / 2,
+                margin: 5,
+              }}
             >
               <Text
                 style={{
@@ -65,20 +72,20 @@ export default function GuessPlayerNameLevel() {
     return lines;
   };
 
-  const checkColorCircle = (lineIndex, circleIndex, circleSize) => {
+  const checkColorCircle = (lineIndex, circleIndex) => {
     if (nameProposition[lineIndex]) {
       const guessedLetter = nameProposition[lineIndex][circleIndex - 1];
       const correctLetter = player[circleIndex - 1];
 
       if (guessedLetter === correctLetter) {
-        return styles.rightCircle(circleSize);
+        return styles.rightCircle;
       } else if (player.includes(guessedLetter)) {
-        return styles.wrongPlaceCircle(circleSize);
+        return styles.wrongPlaceCircle;
       } else {
-        return styles.defaultCircle(circleSize);
+        return styles.defaultCircle;
       }
     } else {
-      return styles.defaultCircle(circleSize);
+      return styles.defaultCircle;
     }
   };
 
@@ -94,11 +101,12 @@ export default function GuessPlayerNameLevel() {
 
   return (
     <View style={styles.container}>
-      {circleLine()}
+      <View style={styles.lineContainer}>{circleLine()}</View>
       <TextInput
         style={styles.inputText}
-        placeholder="Enter your name"
+        placeholder="Player name"
         value={inputText}
+        autoCapitalize="characters"
         onChangeText={(text) => setInputText(text)}
         onSubmitEditing={() =>
           isSameLength ? (isSameText ? handlePress(index) : resetInput()) : null
@@ -109,51 +117,39 @@ export default function GuessPlayerNameLevel() {
   );
 }
 
-const circlePadding = 0;
-const circleMargin = 10;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#008000",
+    justifyContent: "space-between",
+  },
+  lineContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: "33%",
   },
   line: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-  defaultCircle: (circleSize) => ({
-    width: circleSize,
-    height: circleSize,
-    borderRadius: circleSize / 2,
+  defaultCircle: {
     backgroundColor: "white",
-    padding: circlePadding / 2,
-    margin: circleMargin / 2,
-  }),
-  rightCircle: (circleSize) => ({
-    width: circleSize,
-    height: circleSize,
-    borderRadius: circleSize / 2,
+  },
+  rightCircle: {
     backgroundColor: "#B3EFB2",
-    padding: circlePadding / 2,
-    margin: circleMargin / 2,
-  }),
-  wrongPlaceCircle: (circleSize) => ({
-    width: circleSize,
-    height: circleSize,
-    borderRadius: circleSize / 2,
+  },
+  wrongPlaceCircle: {
     backgroundColor: "yellow",
-    padding: circlePadding / 2,
-    margin: circleMargin / 2,
-  }),
+  },
   inputText: {
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
     fontSize: 20,
     height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
     backgroundColor: "white",
+    marginBottom: "60%",
+    textAlign: "center",
+    borderRadius: 10,
+    marginHorizontal: 40,
   },
 });
