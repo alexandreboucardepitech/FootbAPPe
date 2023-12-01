@@ -7,30 +7,17 @@ import { useRoute } from "@react-navigation/native";
 export default function GuessPlayerName() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
-  // const stringsArray = [
-  //   "messi",
-  //   "bellingham",
-  //   "onana",
-  //   "mbappe",
-  //   "mkhitaryan",
-  //   "szoboszlai",
-  //   "paqueta",
-  //   "clauss",
-  //   "ndidi",
-  //   "pallois",
-  // ];
-
   const stringsArray = [
-    "1",
-    "22",
-    "333",
-    "4444",
-    "55555",
-    "666666",
-    "7777777",
-    "88888888",
-    "999999999",
-    "1010101010",
+    "MESSI",
+    "BELLINGHAM",
+    "ONANA",
+    "MBAPPE",
+    "MKHITARYAN",
+    "SZOBOSZLAI",
+    "PAQUETA",
+    "CLAUSS",
+    "NDIDI",
+    "PALLOIS",
   ];
 
   const idArray = [

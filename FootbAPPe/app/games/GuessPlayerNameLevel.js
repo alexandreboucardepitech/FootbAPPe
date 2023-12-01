@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
+
+import backgroundGame from "../../assets/backgroundGame.jpg";
 
 export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const scrollViewRef = useRef(null); // Create a ref for ScrollView
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
@@ -93,6 +104,11 @@ export default function GuessPlayerNameLevel() {
     setNameProposition((prev) => [...prev, inputText]);
     setInputText("");
     setNbLineOfCircles((prev) => prev + 1);
+
+    // Scroll to the bottom after adding a new line
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
   };
 
   const handlePress = (level) => {
@@ -101,17 +117,35 @@ export default function GuessPlayerNameLevel() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.lineContainer}>{circleLine()}</View>
-      <TextInput
-        style={styles.inputText}
-        placeholder="Player name"
-        value={inputText}
-        autoCapitalize="characters"
-        onChangeText={(text) => setInputText(text)}
-        onSubmitEditing={() =>
-          isSameLength ? (isSameText ? handlePress(index) : resetInput()) : null
-        }
-      />
+      <ImageBackground
+        source={backgroundGame}
+        resizeMode="cover"
+        style={styles.image}
+      >
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.scrollView}
+          onContentSizeChange={() => {
+            scrollViewRef.current.scrollToEnd({ animated: true });
+          }}
+        >
+          <View style={styles.lineContainer}>{circleLine()}</View>
+        </ScrollView>
+        <TextInput
+          style={styles.inputText}
+          placeholder="Player name"
+          value={inputText}
+          autoCapitalize="characters"
+          onChangeText={(text) => setInputText(text)}
+          onSubmitEditing={() =>
+            isSameLength
+              ? isSameText
+                ? handlePress(index)
+                : resetInput()
+              : null
+          }
+        />
+      </ImageBackground>
       <StatusBar style="auto" />
     </View>
   );
@@ -123,11 +157,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#008000",
     justifyContent: "space-between",
   },
+  image: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  scrollView: {
+    marginTop: "33%",
+    marginBottom: "10%",
+    marginHorizontal: "1%",
+    borderColor: "white",
+    borderRadius: 10,
+    borderWidth: 2,
+    backgroundColor: "green",
+  },
   lineContainer: {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "33%",
+    marginVertical: "5%",
   },
   line: {
     flexDirection: "row",
