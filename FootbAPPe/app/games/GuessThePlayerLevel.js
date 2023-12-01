@@ -48,12 +48,7 @@ export default function GuessPlayerNameLevel() {
       })
       .then((response) => {
         setTeamGuesses([...teamGuesses, response.data.logo_url]);
-        console.log(
-          "la",
-          response.data,
-          response.data.logo_url,
-          `https://cdn.sofifa.net${response.data.logo_url}`
-        );
+        
       })
       .catch((error) => {
         console.error("Error:", error);
