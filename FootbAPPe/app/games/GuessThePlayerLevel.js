@@ -40,6 +40,9 @@ export default function GuessPlayerNameLevel() {
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
   }, [route.params?.text]);
+  
+  useEffect(() => {
+  }, [playerToGuess]);
 
   const renderCircles = (guess) => {
     const circles = [];
@@ -49,18 +52,16 @@ export default function GuessPlayerNameLevel() {
       playerToGuess.club_name,
       playerToGuess.player_positions,
       playerToGuess.age,
-      playerToGuess.club_jersey_number,
     ];
     const playerValues = [
       guess.nationality_name,
       guess.league_name,
       guess.club_name,
       guess.player_positions,
-      guess.age,
-      guess.club_jersey_number,
+      guess.age.toString(),
     ];
-    for (let i = 0; i < 4; i++) {
-      const dynamicFontSize = Math.max(10, 20 - (playerValues[i].length * 2));
+    for (let i = 0; i < playerToGuessValues.length; i++) {
+      dynamicFontSize = Math.max(10, 20 - (playerValues[i].length * 2));
       circles.push(
         <View
           key={i}
@@ -146,12 +147,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   circle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 5,
+    margin: 7,
   },
   circleText: {
     textAlign: 'center',
