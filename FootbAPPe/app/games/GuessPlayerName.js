@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
 
-export default function ClubFinder() {
+export default function GuessPlayerName() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
   const stringsArray = [
@@ -40,13 +40,13 @@ export default function ClubFinder() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Club Finder</Text>
+        <Text style={styles.title}>Guess Player Name</Text>
       </View>
       <LevelsList
         idArray={idArray}
         stringsArray={stringsArray}
         actualLevel={actualLevel}
-        redirection={"ClubFinderLevel"}
+        redirection={"GuessPlayerNameLevel"}
       />
       <StatusBar style="auto" />
     </View>

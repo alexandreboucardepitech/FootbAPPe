@@ -6,7 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { NGROK_URL } from "@env";
 import axios from "axios";
 
-export default function ClubFinderLevel() {
+export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
   const route = useRoute();
 

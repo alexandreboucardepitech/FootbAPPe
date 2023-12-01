@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
-export default function ClubFinderLevel() {
+export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -17,7 +17,7 @@ export default function ClubFinderLevel() {
   const player = route.params?.text;
 
   const handlePress = (level) => {
-    navigation.navigate("ClubFinder", { level: level - 1 });
+    navigation.navigate("GuessPlayerName", { level: level - 1 });
   };
 
   const circles = Array.from(
