@@ -40,9 +40,24 @@ export default function GuessPlayerNameLevel() {
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
   }, [route.params?.text]);
-  
+
   useEffect(() => {
   }, [playerToGuess]);
+
+  const getStyle = (playerPos, guessPos) => {
+    if (playerPos == guessPos) {
+      return styles.greenCircle;
+    }
+    const playerAllPos = playerPos.split(', ')
+    const guessAllPos = guessPos.split(', ')
+    for (let i = 0; i < playerAllPos.length; i++) {
+      for (let j = 0; j < guessAllPos.length; j++) {
+        if (playerAllPos[i] == guessAllPos[j])
+          return styles.orangeCircle;
+      }
+    }
+    return styles.redCircle;
+  }
 
   const renderCircles = (guess) => {
     const circles = [];
@@ -62,21 +77,37 @@ export default function GuessPlayerNameLevel() {
     ];
     for (let i = 0; i < playerToGuessValues.length; i++) {
       dynamicFontSize = Math.max(10, 20 - (playerValues[i].length * 2));
-      circles.push(
-        <View
-          key={i}
-          style={[
-            styles.circle,
-            playerToGuessValues[i] == playerValues[i]
-              ? styles.activeCircle
-              : styles.inactiveCircle,
-          ]}
-        >
-          <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
-            {playerValues[i]}
-          </Text>
-        </View>
-      );
+      if (i == 3) {
+        circles.push(
+          <View
+            key={i}
+            style={[
+              styles.circle,
+              getStyle(playerToGuessValues[i], playerValues[i])
+            ]}
+          >
+            <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
+              {playerValues[i]}
+            </Text>
+          </View>
+        );
+      } else {
+        circles.push(
+          <View
+            key={i}
+            style={[
+              styles.circle,
+              playerToGuessValues[i] == playerValues[i]
+                ? styles.greenCircle
+                : styles.redCircle,
+            ]}
+          >
+            <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
+              {playerValues[i]}
+            </Text>
+          </View>
+        );
+      }
     }
     return circles;
   };
@@ -158,11 +189,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
-  activeCircle: {
+  greenCircle: {
     backgroundColor: "green",
   },
-  inactiveCircle: {
+  redCircle: {
     backgroundColor: "red",
+  },
+  orangeCircle: {
+    backgroundColor: "orange",
   },
   textAndCircleContainer: {
     alignItems: "center",
