@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import axios from "axios";
 import { NGROK_URL } from "@env";
 import not_found from "../../assets/not_found.png";
+import { StatusBar } from "expo-status-bar";
 import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    TextInput,
-    Image,
-    ImageBackground,
-    ScrollView
-  } from "react-native";
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  ImageBackground,
+  ScrollView,
+  KeyboardAvoidingView
+} from "react-native";
 
-const SearchPlayer = ({setGuesses, guesses, addTeamLogo}) => {
+const SearchPlayer = ({ setGuesses, guesses, addTeamLogo }) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -28,8 +30,10 @@ const SearchPlayer = ({setGuesses, guesses, addTeamLogo}) => {
 
   const handlePress = (player) => {
     if (!guesses.includes(player)) {
-      setGuesses([...guesses, player])
-      addTeamLogo(player)
+      setGuesses([...guesses, player]);
+      addTeamLogo(player);
+      setResponseData(null);
+      setSearchText(null);
     }
   };
 
@@ -51,27 +55,26 @@ const SearchPlayer = ({setGuesses, guesses, addTeamLogo}) => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.button} onPress={fetchData}>
-          <Text style={styles.buttonText}>Fetch Data</Text>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.button} onPress={fetchData}>
+        <Text style={styles.buttonText}> CHERCHE </Text>
+      </TouchableOpacity>
 
+      <KeyboardAvoidingView>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search by short name"
+          placeholder="Search a player"
           value={searchText}
           onChangeText={setSearchText}
         />
+      </KeyboardAvoidingView>
 
-        {responseData && (
-          <View style={styles.responseContainer}>
-            <Text style={styles.responseText}>Response from Server:</Text>
+      {responseData && (
+        <View style={styles.responseContainer}>
+          <ScrollView>
             {responseData.map((player, index) => (
               <TouchableOpacity key={index} onPress={() => handlePress(player)}>
-                <Text>
-                  Player {index + 1}: {player.short_name} / {player.player_id}
-                </Text>
+                <Text>{player.short_name}</Text>
                 <ImageBackground style={styles.playerImage} source={not_found}>
                   <Image
                     style={styles.playerImage}
@@ -84,10 +87,11 @@ const SearchPlayer = ({setGuesses, guesses, addTeamLogo}) => {
                 </ImageBackground>
               </TouchableOpacity>
             ))}
-          </View>
-        )}
-      </View>
-    </ScrollView>
+          </ScrollView>
+        </View>
+      )}
+    <StatusBar style="auto" />
+    </View>
   );
 };
 
@@ -98,7 +102,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: "blue",
+    borderColor: "gray",
+    borderWidth: 1,
     padding: 10,
     borderRadius: 5,
     marginTop: 20,
@@ -121,6 +126,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "white",
     borderRadius: 5,
+    height: 210,
   },
   responseText: {
     fontSize: 18,
