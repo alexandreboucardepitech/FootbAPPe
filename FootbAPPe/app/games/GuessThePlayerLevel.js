@@ -81,7 +81,7 @@ export default function GuessPlayerNameLevel() {
       playerToGuess.league_name,
       playerToGuess.club_name,
       playerToGuess.player_positions,
-      playerToGuess.age,
+      playerToGuess.age.toString(),
     ];
     const playerValues = [
       guess.nationality_name,
@@ -90,6 +90,12 @@ export default function GuessPlayerNameLevel() {
       guess.player_positions,
       guess.age.toString(),
     ];
+    if (guess.age > playerToGuess.age) {
+      playerValues[4] += '↓';
+    }
+    if (guess.age < playerToGuess.age) {
+      playerValues[4] += '↑'
+    }
     for (let i = 0; i < playerToGuessValues.length; i++) {
       dynamicFontSize = Math.max(10, 20 - playerValues[i].length * 2);
       if (i == 3) {
@@ -155,7 +161,7 @@ export default function GuessPlayerNameLevel() {
                 <View style={styles.textAndCircleContainer}>
                   <Text style={styles.textAboveCircle}>{guess.short_name}</Text>
                   <View style={styles.circleContainer}>
-                    {renderCircles(guess, index)}
+                    {renderCircles(guess, guesses.length - 1 - index)}
                   </View>
                 </View>
               </View>
