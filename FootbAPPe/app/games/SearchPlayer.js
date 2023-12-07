@@ -57,7 +57,7 @@ const SearchPlayer = ({ setGuesses, guesses, addTeamLogo }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={fetchData}>
-        <Text style={styles.buttonText}> CHERCHE </Text>
+        <Text style={styles.buttonText}> SEARCH </Text>
       </TouchableOpacity>
 
       <KeyboardAvoidingView>
