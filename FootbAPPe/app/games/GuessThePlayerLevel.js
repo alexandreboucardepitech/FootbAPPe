@@ -147,7 +147,7 @@ export default function GuessPlayerNameLevel() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Guess the player : Niveau ${index}`}</Text>
+        <Text style={styles.title}>{`Guess the player : Level ${index}`}</Text>
         <Text>{`Player : ${player}`}</Text>
       </View>
       <View style={styles.searchContainer}>
