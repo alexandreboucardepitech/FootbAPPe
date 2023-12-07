@@ -1,29 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   TextInput,
+  ScrollView,
+  ImageBackground,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
+
+import backgroundGame from "../../assets/backgroundGame.jpg";
 
 export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
   const route = useRoute();
 
+  const scrollViewRef = useRef(null); // Create a ref for ScrollView
+
   const index = route.params?.index + 1;
   const player = route.params?.text;
-
-  const handlePress = (level) => {
-    navigation.navigate("GuessPlayerName", { level: level - 1 });
-  };
-
-  const circles = Array.from(
-    { length: player.length },
-    (_, index) => index + 1
-  );
 
   const [inputText, setInputText] = useState("");
   const [nameProposition, setNameProposition] = useState([]);
@@ -31,20 +27,24 @@ export default function GuessPlayerNameLevel() {
   const isSameText = player === inputText;
   const [nbLineOfCircles, setNbLineOfCircles] = useState(1);
 
-  const checkColorCircle = (lineIndex, circleIndex) => {
-    if (nameProposition[lineIndex]) {
-      const guessedLetter = nameProposition[lineIndex][circleIndex - 1];
-      const correctLetter = player[circleIndex - 1];
+  const circles = Array.from(
+    { length: player.length },
+    (_, index) => index + 1
+  );
 
-      if (guessedLetter === correctLetter) {
-        return styles.rightCircle;
-      } else if (player.includes(guessedLetter)) {
-        return styles.wrongPlaceCircle;
-      } else {
-        return styles.defaultCircle;
-      }
+  const maxCircleSize = 40;
+  const minCircleSize = 25;
+
+  const calculateCircleSize = () => {
+    const numCircles = Math.min(10, player.length);
+
+    if (player.length <= 6) {
+      return maxCircleSize;
     } else {
-      return styles.defaultCircle;
+      const dynamicSize =
+        maxCircleSize -
+        ((maxCircleSize - minCircleSize) / (10 - 6)) * (numCircles - 6);
+      return Math.max(minCircleSize, dynamicSize);
     }
   };
 
@@ -54,7 +54,16 @@ export default function GuessPlayerNameLevel() {
       lines.push(
         <View key={i} style={styles.line}>
           {circles.map((circleIndex) => (
-            <View key={circleIndex} style={checkColorCircle(i, circleIndex)}>
+            <View
+              key={circleIndex}
+              style={{
+                ...checkColorCircle(i, circleIndex),
+                width: calculateCircleSize(),
+                height: calculateCircleSize(),
+                borderRadius: calculateCircleSize() / 2,
+                margin: 5,
+              }}
+            >
               <Text
                 style={{
                   justifyContent: "center",
@@ -74,25 +83,69 @@ export default function GuessPlayerNameLevel() {
     return lines;
   };
 
+  const checkColorCircle = (lineIndex, circleIndex) => {
+    if (nameProposition[lineIndex]) {
+      const guessedLetter = nameProposition[lineIndex][circleIndex - 1];
+      const correctLetter = player[circleIndex - 1];
+
+      if (guessedLetter === correctLetter) {
+        return styles.rightCircle;
+      } else if (player.includes(guessedLetter)) {
+        return styles.wrongPlaceCircle;
+      } else {
+        return styles.defaultCircle;
+      }
+    } else {
+      return styles.defaultCircle;
+    }
+  };
+
   const resetInput = () => {
     setNameProposition((prev) => [...prev, inputText]);
     setInputText("");
     setNbLineOfCircles((prev) => prev + 1);
+
+    // Scroll to the bottom after adding a new line
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  };
+
+  const handlePress = (level) => {
+    navigation.navigate("GuessPlayerName", { level: level - 1 });
   };
 
   return (
     <View style={styles.container}>
-      <Text>{player}</Text>
-      {circleLine()}
-      <TextInput
-        style={styles.inputText}
-        placeholder="Enter your name"
-        value={inputText}
-        onChangeText={(text) => setInputText(text)}
-        onSubmitEditing={() =>
-          isSameLength ? (isSameText ? handlePress(index) : resetInput()) : null
-        }
-      />
+      {/* <ImageBackground
+        source={backgroundGame}
+        resizeMode="cover"
+        style={styles.image}
+      > */}
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.scrollView}
+          onContentSizeChange={() => {
+            scrollViewRef.current.scrollToEnd({ animated: true });
+          }}
+        >
+          <View style={styles.lineContainer}>{circleLine()}</View>
+        </ScrollView>
+        <TextInput
+          style={styles.inputText}
+          placeholder="Player name"
+          value={inputText}
+          autoCapitalize="characters"
+          onChangeText={(text) => setInputText(text)}
+          onSubmitEditing={() =>
+            isSameLength
+              ? isSameText
+                ? handlePress(index)
+                : resetInput()
+              : null
+          }
+        />
+      {/* </ImageBackground> */}
       <StatusBar style="auto" />
     </View>
   );
@@ -102,51 +155,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#008000",
-    marginTop: 50,
+    justifyContent: "space-between",
   },
-  touchableOpacity: {
-    backgroundColor: "#B3EFB2",
-    padding: 10,
-    margin: 5,
+  image: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  scrollView: {
+    marginTop: "33%",
+    marginBottom: "10%",
+    marginHorizontal: "1%",
+    borderColor: "white",
+    borderRadius: 10,
+    borderWidth: 2,
+    backgroundColor: "#1A5D1A",
+  },
+  lineContainer: {
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
-    height: 100,
+    marginVertical: "5%",
   },
   line: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-  inputText: {
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-    fontSize: 20,
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
   defaultCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
     backgroundColor: "white",
-    margin: 5,
   },
   rightCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
     backgroundColor: "#B3EFB2",
-    margin: 5,
   },
   wrongPlaceCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
     backgroundColor: "yellow",
-    margin: 5,
+  },
+  inputText: {
+    fontSize: 20,
+    height: 40,
+    backgroundColor: "white",
+    marginBottom: "60%",
+    textAlign: "center",
+    borderRadius: 10,
+    marginHorizontal: 40,
   },
 });

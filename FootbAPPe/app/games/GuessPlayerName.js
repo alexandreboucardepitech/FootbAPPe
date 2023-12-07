@@ -8,16 +8,16 @@ export default function GuessPlayerName() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
   const stringsArray = [
-    "Messi",
-    "Bellingham",
-    "Onana",
-    "Kvaratskhelia",
-    "Mkhitaryan",
-    "Szoboszlai",
-    "Paqueta",
-    "Clauss",
-    "Ndidi",
-    "Pallois",
+    "MESSI",
+    "BELLINGHAM",
+    "ONANA",
+    "MBAPPE",
+    "MKHITARYAN",
+    "SZOBOSZLAI",
+    "PAQUETA",
+    "CLAUSS",
+    "NDIDI",
+    "PALLOIS",
   ];
 
   const idArray = [
@@ -65,5 +65,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 50,
     color: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
   },
 });
