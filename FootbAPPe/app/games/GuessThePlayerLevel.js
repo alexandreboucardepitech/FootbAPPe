@@ -5,6 +5,7 @@ import SearchPlayer from "./SearchPlayer.js";
 import { ScrollView } from "react-native-gesture-handler";
 import { NGROK_URL } from "@env";
 import axios from "axios";
+import SimpleStore from "react-native-simple-store";
 
 export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
@@ -18,6 +19,13 @@ export default function GuessPlayerNameLevel() {
   const player = route.params?.text;
 
   const handlePress = (level) => {
+    SimpleStore.save("level", level)
+      .then(() => {
+        console.log("Data saved successfully!");
+      })
+      .catch((error) => {
+        console.log("Error saving data: ", error);
+      });
     navigation.navigate("GuessThePlayer", { level: level - 1 });
   };
 
@@ -48,7 +56,6 @@ export default function GuessPlayerNameLevel() {
       })
       .then((response) => {
         setTeamGuesses([...teamGuesses, response.data.logo_url]);
-        
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -57,6 +64,14 @@ export default function GuessPlayerNameLevel() {
 
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
+    SimpleStore.get(`guessesLevel${index}`)
+      .then((value) => {
+        console.log("Retrieved data: ", value);
+        setGuesses(value);
+      })
+      .catch((error) => {
+        console.log("Error retrieving data: ", error);
+      });
   }, [route.params?.text]);
 
   useEffect(() => {}, [playerToGuess]);
@@ -149,6 +164,7 @@ export default function GuessPlayerNameLevel() {
         setGuesses={setGuesses}
         guesses={guesses}
         addTeamLogo={addTeamLogo}
+        level={index}
       />
       <ScrollView>
         {guesses.map((guess, index) => (

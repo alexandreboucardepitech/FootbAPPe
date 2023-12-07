@@ -3,17 +3,17 @@ import axios from "axios";
 import { NGROK_URL } from "@env";
 import not_found from "../../assets/not_found.png";
 import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    TextInput,
-    Image,
-    ImageBackground,
-    ScrollView
-  } from "react-native";
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  ImageBackground,
+  ScrollView,
+} from "react-native";
 
-const SearchPlayer = ({setGuesses, guesses, addTeamLogo}) => {
+const SearchPlayer = ({ setGuesses, guesses, addTeamLogo, level }) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -28,8 +28,15 @@ const SearchPlayer = ({setGuesses, guesses, addTeamLogo}) => {
 
   const handlePress = (player) => {
     if (!guesses.includes(player)) {
-      setGuesses([...guesses, player])
-      addTeamLogo(player)
+      setGuesses([...guesses, player]);
+      addTeamLogo(player);
+      SimpleStore.save(`guessesLevel${level}`, guesses)
+        .then(() => {
+          console.log("Data saved successfully!");
+        })
+        .catch((error) => {
+          console.log("Error saving data: ", error);
+        });
     }
   };
 
