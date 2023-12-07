@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import { ScrollView } from "react-native-gesture-handler";
@@ -16,6 +16,8 @@ export default function GuessPlayerNameLevel() {
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
+
+  const circleSize = Dimensions.get("window").width * 0.1;
 
   const handlePress = (level) => {
     navigation.navigate("GuessThePlayer", { level: level - 1 });
@@ -218,8 +220,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   circle: {
-    width: 60,
-    height: 60,
+    width: Dimensions.get("window").width * 0.15,
+    height: Dimensions.get("window").width * 0.15,
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
