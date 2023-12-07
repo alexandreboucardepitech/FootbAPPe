@@ -48,7 +48,6 @@ export default function GuessPlayerNameLevel() {
       })
       .then((response) => {
         setTeamGuesses([...teamGuesses, response.data.logo_url]);
-        
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -82,7 +81,7 @@ export default function GuessPlayerNameLevel() {
       playerToGuess.league_name,
       playerToGuess.club_name,
       playerToGuess.player_positions,
-      playerToGuess.age,
+      playerToGuess.age.toString(),
     ];
     const playerValues = [
       guess.nationality_name,
@@ -91,6 +90,12 @@ export default function GuessPlayerNameLevel() {
       guess.player_positions,
       guess.age.toString(),
     ];
+    if (guess.age > playerToGuess.age) {
+      playerValues[4] += '↓';
+    }
+    if (guess.age < playerToGuess.age) {
+      playerValues[4] += '↑'
+    }
     for (let i = 0; i < playerToGuessValues.length; i++) {
       dynamicFontSize = Math.max(10, 20 - playerValues[i].length * 2);
       if (i == 3) {
@@ -140,28 +145,30 @@ export default function GuessPlayerNameLevel() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text
-          style={styles.title}
-        >{`https://cdn.sofifa.net${teamGuesses[0]}`}</Text>
+        <Text style={styles.title}>{`Guess the player : Niveau ${index}`}</Text>
         <Text>{`Player : ${player}`}</Text>
       </View>
-      <SearchPlayer
-        setGuesses={setGuesses}
-        guesses={guesses}
-        addTeamLogo={addTeamLogo}
-      />
-      <ScrollView>
-        {guesses.map((guess, index) => (
-          <View key={index} style={styles.guess}>
-            <View style={styles.textAndCircleContainer}>
-              <Text style={styles.textAboveCircle}>{guess.short_name}</Text>
-              <View style={styles.circleContainer}>
-                {renderCircles(guess, index)}
+      <View style={styles.searchContainer}>
+        <SearchPlayer
+          setGuesses={setGuesses}
+          guesses={guesses}
+          addTeamLogo={addTeamLogo}
+        />
+        <View style={{ flex: 1, justifyContent: "flex-end"}}>
+          <ScrollView>
+            {guesses.slice().reverse().map((guess, index) => (
+              <View key={index} style={styles.guess}>
+                <View style={styles.textAndCircleContainer}>
+                  <Text style={styles.textAboveCircle}>{guess.short_name}</Text>
+                  <View style={styles.circleContainer}>
+                    {renderCircles(guess, guesses.length - 1 - index)}
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
       {guesses.length != 0 &&
         player == guesses[guesses.length - 1].player_id && (
           <TouchableOpacity
@@ -237,5 +244,11 @@ const styles = StyleSheet.create({
   textAboveCircle: {
     textAlign: "center",
     marginBottom: 5,
+  },
+  searchContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
   },
 });
