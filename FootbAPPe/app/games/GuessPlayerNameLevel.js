@@ -117,11 +117,11 @@ export default function GuessPlayerNameLevel() {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
+      {/* <ImageBackground
         source={backgroundGame}
         resizeMode="cover"
         style={styles.image}
-      >
+      > */}
         <ScrollView
           ref={scrollViewRef}
           style={styles.scrollView}
@@ -145,7 +145,7 @@ export default function GuessPlayerNameLevel() {
               : null
           }
         />
-      </ImageBackground>
+      {/* </ImageBackground> */}
       <StatusBar style="auto" />
     </View>
   );
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 10,
     borderWidth: 2,
-    backgroundColor: "green",
+    backgroundColor: "#1A5D1A",
   },
   lineContainer: {
     flexDirection: "column",
