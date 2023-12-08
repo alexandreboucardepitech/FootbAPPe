@@ -16,7 +16,7 @@ def database_teams(query):
 def database_players(query):
     client = MongoClient(uri)
     db = client.FootbAPPe
-    players = db.players
+    players = db.male_players
 
     cursor = list(players.find(query))
 

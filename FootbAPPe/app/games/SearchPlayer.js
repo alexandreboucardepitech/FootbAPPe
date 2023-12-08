@@ -12,10 +12,11 @@ import {
   Image,
   ImageBackground,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
+import SimpleStore from "react-native-simple-store";
 
-const SearchPlayer = ({ setGuesses, guesses, addTeamLogo }) => {
+const SearchPlayer = ({ forceRefresh, guesses, level }) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -29,11 +30,19 @@ const SearchPlayer = ({ setGuesses, guesses, addTeamLogo }) => {
   };
 
   const handlePress = (player) => {
+    console.log("aaa");
     if (!guesses.includes(player)) {
-      setGuesses([...guesses, player]);
-      addTeamLogo(player);
+      console.log("vv");
+      SimpleStore.save(`guessesLevel${level}`, [...guesses, player])
+        .then(() => {
+          console.log("Data saved successfully!", [...guesses, player]);
+        })
+        .catch((error) => {
+          console.log("Error saving data: ", error);
+        });
       setResponseData(null);
       setSearchText(null);
+      forceRefresh();
     }
   };
 
@@ -90,7 +99,7 @@ const SearchPlayer = ({ setGuesses, guesses, addTeamLogo }) => {
           </ScrollView>
         </View>
       )}
-    <StatusBar style="auto" />
+      <StatusBar style="auto" />
     </View>
   );
 };
