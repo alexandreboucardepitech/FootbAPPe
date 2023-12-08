@@ -73,7 +73,7 @@ export default function GuessPlayerNameLevel() {
   useEffect(() => {
     console.log(playerToGuess)
     if (playerToGuess) {
-      SimpleStore.get("guessesLevel23")
+      SimpleStore.get(`guessesLevel${index}`)
         .then((value) => {
           console.log("Retrieved data: ", value);
           if (value) {
