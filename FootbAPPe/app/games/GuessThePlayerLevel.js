@@ -14,6 +14,7 @@ export default function GuessPlayerNameLevel() {
   const [guesses, setGuesses] = useState([]);
   const [teamGuesses, setTeamGuesses] = useState([]);
   const [playerToGuess, setPlayerToGuess] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
@@ -42,6 +43,7 @@ export default function GuessPlayerNameLevel() {
       })
       .then((response) => {
         setPlayerToGuess(response.data);
+        forceRefresh();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -82,7 +84,7 @@ export default function GuessPlayerNameLevel() {
           console.log("Error retrieving data: ", error);
         });
       }
-  }, [playerToGuess, Date.now()]);
+  }, [playerToGuess, refreshTrigger]);
 
   useEffect(() => {}, [playerToGuess]);
 
@@ -98,6 +100,10 @@ export default function GuessPlayerNameLevel() {
       }
     }
     return styles.redCircle;
+  };
+
+  const forceRefresh = () => {
+    setRefreshTrigger(Date.now());
   };
 
   const renderCircles = (guess, playerIndex) => {
@@ -177,7 +183,7 @@ export default function GuessPlayerNameLevel() {
       </View>
       <View style={styles.searchContainer}>
         <SearchPlayer
-          setGuesses={setGuesses}
+          forceRefresh={forceRefresh}
           guesses={guesses}
           addTeamLogo={addTeamLogo}
           level={index}

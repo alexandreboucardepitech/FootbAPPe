@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import SimpleStore from "react-native-simple-store";
 
-const SearchPlayer = ({ setGuesses, guesses, addTeamLogo, level }) => {
+const SearchPlayer = ({ forceRefresh, guesses, addTeamLogo, level }) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -44,6 +44,7 @@ const SearchPlayer = ({ setGuesses, guesses, addTeamLogo, level }) => {
       addTeamLogo(player);
       setResponseData(null);
       setSearchText(null);
+      forceRefresh();
     }
   };
 
