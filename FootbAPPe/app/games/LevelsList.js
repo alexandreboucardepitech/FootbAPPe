@@ -24,9 +24,9 @@ const LevelsList = ({ stringsArray, idArray, actualLevel, redirection }) => {
         <TouchableOpacity
           key={index}
           style={styles.touchableOpacity}
-          onPress={() => handlePress(text, index)}
+          onPress={() => handlePress(redirection == "GuessPlayerNameLevel" ? stringsArray[index] : text, index)}
         >
-          <Text>{index > actualLevel ? `Niveau ${index + 1}` : stringsArray[index]}</Text>
+          <Text>{index > actualLevel ? `Level ${index + 1}` : stringsArray[index]}</Text>
           {index > actualLevel + 1 && (
           <Image
             source={imageLocked}

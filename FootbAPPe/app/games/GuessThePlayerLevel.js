@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import { ScrollView } from "react-native-gesture-handler";
@@ -17,6 +17,8 @@ export default function GuessPlayerNameLevel() {
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
+
+  const circleSize = Dimensions.get("window").width * 0.1;
 
   const handlePress = (level) => {
     SimpleStore.save("level", level)
@@ -64,7 +66,7 @@ export default function GuessPlayerNameLevel() {
 
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
-    SimpleStore.get(`guessesLevel${index}`)
+    SimpleStore.get('guessesLevel10')
       .then((value) => {
         console.log("Retrieved data: ", value);
         setGuesses(value);
@@ -97,7 +99,7 @@ export default function GuessPlayerNameLevel() {
       playerToGuess.league_name,
       playerToGuess.club_name,
       playerToGuess.player_positions,
-      playerToGuess.age,
+      playerToGuess.age.toString(),
     ];
     const playerValues = [
       guess.nationality_name,
@@ -106,6 +108,12 @@ export default function GuessPlayerNameLevel() {
       guess.player_positions,
       guess.age.toString(),
     ];
+    if (guess.age > playerToGuess.age) {
+      playerValues[4] += '↓';
+    }
+    if (guess.age < playerToGuess.age) {
+      playerValues[4] += '↑'
+    }
     for (let i = 0; i < playerToGuessValues.length; i++) {
       dynamicFontSize = Math.max(10, 20 - playerValues[i].length * 2);
       if (i == 3) {
@@ -155,29 +163,30 @@ export default function GuessPlayerNameLevel() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text
-          style={styles.title}
-        >{`https://cdn.sofifa.net${teamGuesses[0]}`}</Text>
+        <Text style={styles.title}>{`Guess the player : Level ${index}`}</Text>
         <Text>{`Player : ${player}`}</Text>
       </View>
-      <SearchPlayer
-        setGuesses={setGuesses}
-        guesses={guesses}
-        addTeamLogo={addTeamLogo}
-        level={index}
-      />
-      <ScrollView>
-        {guesses.map((guess, index) => (
-          <View key={index} style={styles.guess}>
-            <View style={styles.textAndCircleContainer}>
-              <Text style={styles.textAboveCircle}>{guess.short_name}</Text>
-              <View style={styles.circleContainer}>
-                {renderCircles(guess, index)}
+      <View style={styles.searchContainer}>
+        <SearchPlayer
+          setGuesses={setGuesses}
+          guesses={guesses}
+          addTeamLogo={addTeamLogo}
+        />
+        <View style={{ flex: 1, justifyContent: "flex-end"}}>
+          <ScrollView>
+            {guesses.slice().reverse().map((guess, index) => (
+              <View key={index} style={styles.guess}>
+                <View style={styles.textAndCircleContainer}>
+                  <Text style={styles.textAboveCircle}>{guess.short_name}</Text>
+                  <View style={styles.circleContainer}>
+                    {renderCircles(guess, guesses.length - 1 - index)}
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
       {guesses.length != 0 &&
         player == guesses[guesses.length - 1].player_id && (
           <TouchableOpacity
@@ -227,8 +236,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   circle: {
-    width: 60,
-    height: 60,
+    width: Dimensions.get("window").width * 0.15,
+    height: Dimensions.get("window").width * 0.15,
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
@@ -253,5 +262,11 @@ const styles = StyleSheet.create({
   textAboveCircle: {
     textAlign: "center",
     marginBottom: 5,
+  },
+  searchContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
   },
 });

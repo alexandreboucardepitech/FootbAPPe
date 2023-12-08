@@ -16,7 +16,7 @@ export default function CarrerTracerLevel() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Carrer Tracer : Niveau ${index}`}</Text>
+        <Text style={styles.title}>{`Carrer Tracer : Level ${index}`}</Text>
         <Text>{`Player : ${player}`}</Text>
       </View>
       <TouchableOpacity

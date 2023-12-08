@@ -16,7 +16,7 @@ export default function Starting11Level() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Starting 11 : Niveau ${index}`}</Text>
+        <Text style={styles.title}>{`Starting 11 : Level ${index}`}</Text>
         <Text>{`Player : ${player}`}</Text>
       </View>
       <TouchableOpacity
