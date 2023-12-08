@@ -66,15 +66,23 @@ export default function GuessPlayerNameLevel() {
 
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
-    SimpleStore.get('guessesLevel10')
-      .then((value) => {
-        console.log("Retrieved data: ", value);
-        setGuesses(value);
-      })
-      .catch((error) => {
-        console.log("Error retrieving data: ", error);
-      });
   }, [route.params?.text]);
+  
+  useEffect(() => {
+    console.log(playerToGuess)
+    if (playerToGuess) {
+      SimpleStore.get("guessesLevel23")
+        .then((value) => {
+          console.log("Retrieved data: ", value);
+          if (value) {
+            setGuesses(value);
+          }
+        })
+        .catch((error) => {
+          console.log("Error retrieving data: ", error);
+        });
+      }
+  }, [playerToGuess, Date.now()]);
 
   useEffect(() => {}, [playerToGuess]);
 
@@ -94,6 +102,7 @@ export default function GuessPlayerNameLevel() {
 
   const renderCircles = (guess, playerIndex) => {
     const circles = [];
+    console.log("laaaa", playerToGuess);
     const playerToGuessValues = [
       playerToGuess.nationality_name,
       playerToGuess.league_name,
@@ -171,6 +180,7 @@ export default function GuessPlayerNameLevel() {
           setGuesses={setGuesses}
           guesses={guesses}
           addTeamLogo={addTeamLogo}
+          level={index}
         />
         <View style={{ flex: 1, justifyContent: "flex-end"}}>
           <ScrollView>
