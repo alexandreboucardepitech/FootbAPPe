@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import SimpleStore from "react-native-simple-store";
 
-const SearchPlayer = ({ forceRefresh, guesses, addTeamLogo, level }) => {
+const SearchPlayer = ({ forceRefresh, guesses, level }) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -40,8 +40,6 @@ const SearchPlayer = ({ forceRefresh, guesses, addTeamLogo, level }) => {
         .catch((error) => {
           console.log("Error saving data: ", error);
         });
-      // setGuesses([...guesses, player]);
-      addTeamLogo(player);
       setResponseData(null);
       setSearchText(null);
       forceRefresh();

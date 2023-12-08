@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import { ScrollView } from "react-native-gesture-handler";
@@ -12,14 +19,17 @@ export default function GuessPlayerNameLevel() {
   const route = useRoute();
 
   const [guesses, setGuesses] = useState([]);
-  const [teamGuesses, setTeamGuesses] = useState([]);
   const [playerToGuess, setPlayerToGuess] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
 
-  const circleSize = Dimensions.get("window").width * 0.1;
+  const clear = () => {
+    SimpleStore.delete(`guessesLevel${index}`);
+    setGuesses([]);
+    SimpleStore.delete(`guessesLevelLogos${index}`);
+  };
 
   const handlePress = (level) => {
     SimpleStore.save("level", level)
@@ -50,28 +60,12 @@ export default function GuessPlayerNameLevel() {
       });
   };
 
-  const addTeamLogo = (player) => {
-    axios
-      .get(`${NGROK_URL}/api/team/${player.club_team_id}`, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        setTeamGuesses([...teamGuesses, response.data.logo_url]);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
   }, [route.params?.text]);
-  
+
   useEffect(() => {
-    console.log(playerToGuess)
+    console.log(playerToGuess);
     if (playerToGuess) {
       SimpleStore.get(`guessesLevel${index}`)
         .then((value) => {
@@ -83,7 +77,7 @@ export default function GuessPlayerNameLevel() {
         .catch((error) => {
           console.log("Error retrieving data: ", error);
         });
-      }
+    }
   }, [playerToGuess, refreshTrigger]);
 
   useEffect(() => {}, [playerToGuess]);
@@ -108,7 +102,6 @@ export default function GuessPlayerNameLevel() {
 
   const renderCircles = (guess, playerIndex) => {
     const circles = [];
-    console.log("laaaa", playerToGuess);
     const playerToGuessValues = [
       playerToGuess.nationality_name,
       playerToGuess.league_name,
@@ -124,10 +117,10 @@ export default function GuessPlayerNameLevel() {
       guess.age.toString(),
     ];
     if (guess.age > playerToGuess.age) {
-      playerValues[4] += '↓';
+      playerValues[4] += "↓";
     }
     if (guess.age < playerToGuess.age) {
-      playerValues[4] += '↑'
+      playerValues[4] += "↑";
     }
     for (let i = 0; i < playerToGuessValues.length; i++) {
       dynamicFontSize = Math.max(10, 20 - playerValues[i].length * 2);
@@ -156,18 +149,9 @@ export default function GuessPlayerNameLevel() {
                 : styles.redCircle,
             ]}
           >
-            {i !== 2 || teamGuesses[playerIndex] == "" ? (
-              <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
-                {playerValues[i]}
-              </Text>
-            ) : (
-              <Image
-                source={{
-                  uri: `https://cdn.sofifa.net${teamGuesses[playerIndex]}`,
-                }}
-                style={{ width: 40, height: 40 }}
-              />
-            )}
+            <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
+              {playerValues[i]}
+            </Text>
           </View>
         );
       }
@@ -185,21 +169,25 @@ export default function GuessPlayerNameLevel() {
         <SearchPlayer
           forceRefresh={forceRefresh}
           guesses={guesses}
-          addTeamLogo={addTeamLogo}
           level={index}
         />
-        <View style={{ flex: 1, justifyContent: "flex-end"}}>
+        <View style={{ flex: 1, justifyContent: "flex-end" }}>
           <ScrollView>
-            {guesses.slice().reverse().map((guess, index) => (
-              <View key={index} style={styles.guess}>
-                <View style={styles.textAndCircleContainer}>
-                  <Text style={styles.textAboveCircle}>{guess.short_name}</Text>
-                  <View style={styles.circleContainer}>
-                    {renderCircles(guess, guesses.length - 1 - index)}
+            {guesses
+              .slice()
+              .reverse()
+              .map((guess, index) => (
+                <View key={index} style={styles.guess}>
+                  <View style={styles.textAndCircleContainer}>
+                    <Text style={styles.textAboveCircle}>
+                      {guess.short_name}
+                    </Text>
+                    <View style={styles.circleContainer}>
+                      {renderCircles(guess, guesses.length - 1 - index)}
+                    </View>
                   </View>
                 </View>
-              </View>
-            ))}
+              ))}
           </ScrollView>
         </View>
       </View>
@@ -213,6 +201,9 @@ export default function GuessPlayerNameLevel() {
             <Text>FINISH</Text>
           </TouchableOpacity>
         )}
+      <TouchableOpacity onPress={() => clear()}>
+        <Text>CLEAR</Text>
+      </TouchableOpacity>
     </View>
   );
 }
