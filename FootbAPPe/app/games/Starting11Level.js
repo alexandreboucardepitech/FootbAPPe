@@ -10,7 +10,7 @@ import {
 import { StatusBar, Dimensions } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import SearchPlayer from "./SearchPlayer.js";
+import SearchPlayerS11 from "./SearchPlayerS11.js";
 import backgroundGame from "../../assets/backgroundGame.jpg";
 
 const { width, height } = Dimensions.get("window");
@@ -22,9 +22,21 @@ export default function Starting11Level() {
   const index = route.params?.index + 1;
   const team = route.params?.text;
 
+  const [position, setPosition] = useState(null);
+  const [rightPlayer, setRightPlayer] = useState([false, false, false, false, false, false, false, false, false, false, false]);
+  const [positionOfPlayer, setPositionOfPlayer] = useState(null);
+
   const handlePress = (level) => {
     navigation.navigate("Starting11", { level: level - 1 });
   };
+
+  const setGoodPosition = (index) => {
+    let rightPlayers = rightPlayer;
+    rightPlayers[index] = true;
+    setRightPlayer(rightPlayers);
+    setModalVisible(!modalVisible);
+    console.log(rightPlayer);
+  }
 
   const checkPosition = (rowIndex) => {
     if (rowIndex === 0) {
@@ -54,7 +66,14 @@ export default function Starting11Level() {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const toggleModal = () => {
+  const toggleModal = (position, index) => {
+    team.map((player) => {
+      if (player[0] === position) {
+        setPosition(player[1]);
+        setPositionOfPlayer(index);
+      }
+    });
+
     setModalVisible(!modalVisible);
   };
 
@@ -79,7 +98,7 @@ export default function Starting11Level() {
               row.map((position, colIndex) => (
                 <TouchableOpacity
                   key={colIndex}
-                  onPress={toggleModal}
+                  onPress={() => toggleModal(position, colIndex)}
                   style={{
                     ...checkPosition(rowIndex),
                     height: width * 0.13,
@@ -107,6 +126,7 @@ export default function Starting11Level() {
           <View style={styles.modalContainer}>
             <View style={styles.modalView}>
               <Text>Modal Content Goes Here</Text>
+              <SearchPlayerS11 level={index} position={position} setGoodPosition={setGoodPosition} positionOfPlayer={positionOfPlayer}/>
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);
@@ -184,11 +204,11 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: "flex-end", // Align the modal at the bottom
+    justifyContent: "flex-end",
   },
   modalView: {
-    width: width, // Full width of the screen
-    height: height * 0.5, // Half of the height of the screen
+    width: width,
+    height: height * 0.5,
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -197,7 +217,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: -2, // Negative value to make the shadow go up
+      height: -2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,

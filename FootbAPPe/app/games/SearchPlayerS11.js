@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import SimpleStore from "react-native-simple-store";
 
-const SearchPlayer = ({ forceRefresh, guesses, level }) => {
+const SearchPlayerS11 = ({ level, position, setGoodPosition, positionOfPlayer }) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -30,17 +30,11 @@ const SearchPlayer = ({ forceRefresh, guesses, level }) => {
   };
 
   const handlePress = (player) => {
-    if (!guesses.includes(player)) {
-      SimpleStore.save(`guessesLevel${level}`, [...guesses, player])
-        .then(() => {
-          console.log("Data saved successfully!", [...guesses, player]);
-        })
-        .catch((error) => {
-          console.log("Error saving data: ", error);
-        });
+    if (player.player_id == position) {
+      setGoodPosition(positionOfPlayer);
+      console.log(positionOfPlayer);
       setResponseData(null);
       setSearchText(null);
-      forceRefresh();
     }
   };
 
@@ -55,7 +49,6 @@ const SearchPlayer = ({ forceRefresh, guesses, level }) => {
       })
       .then((response) => {
         setResponseData(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -147,4 +140,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchPlayer;
+export default SearchPlayerS11;
