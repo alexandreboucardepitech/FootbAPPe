@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   Dimensions,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";

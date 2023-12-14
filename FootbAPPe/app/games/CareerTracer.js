@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
 
-export default function CarrerTracer() {
+export default function CareerTracer() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
 
@@ -20,16 +20,16 @@ export default function CarrerTracer() {
     210035, //Alex Grimaldo
   ];
   const stringsArray = [
-    "Karim Benzema",
+    "Cristiano Ronaldo",
     "Antoine Griezmann",
     "Hugo Lloris",
-    "Angel Di Maria",
+    "Di Maria",
+    "Kingsley Coman",
     "Thiago Alcantara",
     "Alvaro Morata",
-    "Xavi Simons",
-    "Raphaël Leao",
+    "Rafael Leao",
     "Ludovic Blas",
-    "Alex Grimaldo",
+    "Alex Grimaldo"
   ];
 
   useEffect(() => {
@@ -39,13 +39,13 @@ export default function CarrerTracer() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Carrer Tracer</Text>
+        <Text style={styles.title}>Career Tracer</Text>
       </View>
       <LevelsList
         idArray={idArray}
         stringsArray={stringsArray}
         actualLevel={actualLevel}
-        redirection={"CarrerTracerLevel"}
+        redirection={"CareerTracerLevel"}
       />
     </View>
   );
