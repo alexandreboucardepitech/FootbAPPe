@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import DisplayCoins from "./DisplayCoins.js"
 
 import backgroundGame from "../assets/backgroundGame.jpg";
 import imageGuessThePlayer from "../assets/GuessThePlayer.png";
@@ -25,6 +26,7 @@ export default function GameMenu() {
         resizeMode="cover"
         style={styles.image}
       >
+        <DisplayCoins></DisplayCoins>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Select Game</Text>
         </View>

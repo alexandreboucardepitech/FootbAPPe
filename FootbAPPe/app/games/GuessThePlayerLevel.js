@@ -13,6 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { NGROK_URL } from "@env";
 import axios from "axios";
 import SimpleStore from "react-native-simple-store";
+import DisplayCoins from "../DisplayCoins.js"
 
 export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
@@ -21,6 +22,7 @@ export default function GuessPlayerNameLevel() {
   const [guesses, setGuesses] = useState([]);
   const [playerToGuess, setPlayerToGuess] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
+  const [coins, setCoins] = useState(0);
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
@@ -32,6 +34,14 @@ export default function GuessPlayerNameLevel() {
   };
 
   const handlePress = (level) => {
+    console.log("laaa", coins);
+    SimpleStore.save("coins", coins + 1)
+      .then(() => {
+        console.log("Data coins saved successfully!");
+      })
+      .catch((error) => {
+        console.log("Error saving data: ", error);
+      });
     SimpleStore.save("level", level)
       .then(() => {
         console.log("Data saved successfully!");
@@ -62,6 +72,12 @@ export default function GuessPlayerNameLevel() {
 
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
+    SimpleStore.get("coins")
+    .then((value) => {
+      console.log("Retrieved datadela: ", value);
+      if (value)
+        setCoins(value);
+    })
   }, [route.params?.text]);
 
   useEffect(() => {
@@ -161,6 +177,7 @@ export default function GuessPlayerNameLevel() {
 
   return (
     <View style={styles.container}>
+      <DisplayCoins></DisplayCoins>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{`Guess the player : Level ${index}`}</Text>
         <Text>{`Player : ${player}`}</Text>
