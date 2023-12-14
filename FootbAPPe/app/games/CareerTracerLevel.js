@@ -21,26 +21,21 @@ export default function CareerTracerLevel() {
   const [progression, setProgression] = useState(1);
 
   const handlePress = (level) => {
-    SimpleStore.save("CareerTracerLevel", level)
-      .then(() => {
-        console.log("Data saved successfully!");
-      })
-      .catch((error) => {
-        console.log("Error saving data: ", error);
-      });
+    SimpleStore.save("CareerTracerLevel", level).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
     navigation.navigate("CareerTracer", { level: level - 1 });
   };
 
   const upgradeProgression = () => {
-    SimpleStore.save(`CareerTracerLevel${index}Progression`, progression + 1)
-      .then(() => {
-        console.log("Data saved successfully!");
-      })
-      .catch((error) => {
-        console.log("Error saving data: ", error);
-      });
+    SimpleStore.save(
+      `CareerTracerLevel${index}Progression`,
+      progression + 1
+    ).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
     setProgression(progression + 1);
-  }
+  };
 
   const careers = [
     {
@@ -275,9 +270,6 @@ export default function CareerTracerLevel() {
     );
 
     if (foundCareer) {
-      foundCareer.career.map((club) => {
-        console.log(club.name, club.dates);
-      });
       return foundCareer.career;
     } else {
       return "career not found";
@@ -286,7 +278,6 @@ export default function CareerTracerLevel() {
 
   SimpleStore.get(`CareerTracerLevel${index}Progression`)
     .then((value) => {
-      console.log("Retrieved data level: ", value);
       setProgression(value);
     })
     .catch((error) => {

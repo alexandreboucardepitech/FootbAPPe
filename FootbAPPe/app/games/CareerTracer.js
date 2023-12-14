@@ -30,12 +30,11 @@ export default function CareerTracer() {
     "Alvaro Morata",
     "Rafael Leao",
     "Ludovic Blas",
-    "Alex Grimaldo"
+    "Alex Grimaldo",
   ];
 
   SimpleStore.get("CareerTracerLevel")
     .then((value) => {
-      console.log("Retrieved data level: ", value);
       setActualLevel(value - 1);
     })
     .catch((error) => {

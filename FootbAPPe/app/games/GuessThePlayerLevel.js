@@ -31,13 +31,9 @@ export default function GuessPlayerNameLevel() {
   };
 
   const handlePress = (level) => {
-    SimpleStore.save("level", level)
-      .then(() => {
-        console.log("Data saved successfully!");
-      })
-      .catch((error) => {
-        console.log("Error saving data: ", error);
-      });
+    SimpleStore.save("level", level).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
     navigation.navigate("GuessThePlayer", { level: level - 1 });
   };
 
@@ -64,11 +60,9 @@ export default function GuessPlayerNameLevel() {
   }, [route.params?.text]);
 
   useEffect(() => {
-    console.log(playerToGuess);
     if (playerToGuess) {
       SimpleStore.get(`guessesLevel${index}`)
         .then((value) => {
-          console.log("Retrieved data: ", value);
           if (value) {
             setGuesses(value);
           }

@@ -30,16 +30,12 @@ const SearchPlayer = ({ forceRefresh, guesses, level }) => {
   };
 
   const handlePress = (player) => {
-    console.log("aaa");
     if (!guesses.includes(player)) {
-      console.log("vv");
-      SimpleStore.save(`guessesLevel${level}`, [...guesses, player])
-        .then(() => {
-          console.log("Data saved successfully!", [...guesses, player]);
-        })
-        .catch((error) => {
+      SimpleStore.save(`guessesLevel${level}`, [...guesses, player]).catch(
+        (error) => {
           console.log("Error saving data: ", error);
-        });
+        }
+      );
       setResponseData(null);
       setSearchText(null);
       forceRefresh();
