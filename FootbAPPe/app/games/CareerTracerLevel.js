@@ -6,9 +6,13 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Dimensions,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SimpleStore from "react-native-simple-store";
+import SearchPlayer from "./SearchPlayer.js";
+import { NGROK_URL } from "@env";
+import axios from "axios";
 
 export default function CareerTracerLevel() {
   const navigation = useNavigation();
@@ -19,6 +23,14 @@ export default function CareerTracerLevel() {
 
   const [playerCareer, setPlayerCareer] = useState(null);
   const [progression, setProgression] = useState(1);
+  const [guesses, setGuesses] = useState([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
+  const [playerToGuess, setPlayerToGuess] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
   const handlePress = (level) => {
     SimpleStore.save("CareerTracerLevel", level).catch((error) => {
@@ -27,15 +39,61 @@ export default function CareerTracerLevel() {
     navigation.navigate("CareerTracer", { level: level - 1 });
   };
 
-  const upgradeProgression = () => {
+  const clear = () => {
+    SimpleStore.delete(`guessesLevelCareer${index}`);
+    SimpleStore.delete(`CareerTracerLevel${index}Progression`);
+    setGuesses([]);
+  };
+
+  const getPlayerToGuess = (playerId) => {
+    console.log("request /", NGROK_URL);
+    axios
+      .get(`${NGROK_URL}/api/player/${playerId}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setPlayerToGuess(response.data);
+        forceRefresh();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const changeProgression = (newProgression) => {
     SimpleStore.save(
       `CareerTracerLevel${index}Progression`,
-      progression + 1
+      newProgression
     ).catch((error) => {
       console.log("Error saving data: ", error);
     });
-    setProgression(progression + 1);
+    setProgression(newProgression);
   };
+
+  useEffect(() => {
+    if (playerCareer && player) {
+      console.log("eh oui");
+      SimpleStore.get(`guessesLevelCareer${index}`)
+        .then((value) => {
+          if (value) {
+            console.log("guesses : ", guesses, " / value : ", value);
+            setGuesses(value);
+            changeProgression(value.length + 1);
+          } else {
+            changeProgression(1);
+            console.log("en fait non");
+          }
+        })
+        .catch((error) => {
+          console.log("Error retrieving data: ", error);
+        });
+    } else {
+      console.log("eh non");
+    }
+  }, [playerToGuess, playerCareer, refreshTrigger]);
 
   const careers = [
     {
@@ -270,6 +328,9 @@ export default function CareerTracerLevel() {
     );
 
     if (foundCareer) {
+      forceRefresh();
+      console.log("fini");
+      getPlayerToGuess(foundCareer.player);
       return foundCareer.career;
     } else {
       return "career not found";
@@ -288,11 +349,92 @@ export default function CareerTracerLevel() {
     setPlayerCareer(getplayerCareer());
   }, [route.params?.level]);
 
+  const getCircleColor = (playerPos, guessPos) => {
+    if (playerPos == guessPos) {
+      return styles.greenCircle;
+    }
+    const playerAllPos = playerPos.split(", ");
+    const guessAllPos = guessPos.split(", ");
+    for (let i = 0; i < playerAllPos.length; i++) {
+      for (let j = 0; j < guessAllPos.length; j++) {
+        if (playerAllPos[i] == guessAllPos[j]) return styles.orangeCircle;
+      }
+    }
+    return styles.redCircle;
+  };
+
+  const forceRefresh = () => {
+    console.log("refresh");
+    setRefreshTrigger(Date.now());
+  };
+  const renderCircles = (guess, playerIndex) => {
+    const circles = [];
+    if (guesses.length != 0 && playerToGuess) {
+      const playerToGuessValues = [
+        playerToGuess.nationality_name,
+        playerToGuess.league_name,
+        playerToGuess.club_name,
+        playerToGuess.player_positions,
+        playerToGuess.age.toString(),
+      ];
+      const playerValues = [
+        guess.nationality_name,
+        guess.league_name,
+        guess.club_name,
+        guess.player_positions,
+        guess.age.toString(),
+      ];
+      if (guess.age > playerToGuess.age) {
+        playerValues[4] += "↓";
+      }
+      if (guess.age < playerToGuess.age) {
+        playerValues[4] += "↑";
+      }
+      for (let i = 0; i < playerToGuessValues.length; i++) {
+        dynamicFontSize = Math.max(10, 20 - playerValues[i].length * 2);
+        if (i == 3) {
+          circles.push(
+            <View
+              key={i}
+              style={[
+                styles.circle,
+                getCircleColor(playerToGuessValues[i], playerValues[i]),
+              ]}
+            >
+              <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
+                {playerValues[i]}
+              </Text>
+            </View>
+          );
+        } else {
+          circles.push(
+            <View
+              key={i}
+              style={[
+                styles.circle,
+                playerToGuessValues[i] == playerValues[i]
+                  ? styles.greenCircle
+                  : styles.redCircle,
+              ]}
+            >
+              <Text style={[styles.circleText, { fontSize: dynamicFontSize }]}>
+                {playerValues[i]}
+              </Text>
+            </View>
+          );
+        }
+      }
+    }
+    return circles;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{`Career Tracer : Level ${index}`}</Text>
       </View>
+
+      <Text>The career of the player to found : </Text>
       <ScrollView>
         {playerCareer &&
           playerCareer.slice(0, progression).map((club, clubIndex) => (
@@ -309,19 +451,54 @@ export default function CareerTracerLevel() {
             </View>
           ))}
       </ScrollView>
-      <TouchableOpacity
-        key={`nextButton-${index}`} // Unique key for next button
-        style={styles.touchableOpacity}
-        onPress={() => upgradeProgression()}
-      >
-        <Text>Next</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        key={`finishButton-${index}`} // Unique key for finish button
-        style={styles.touchableOpacity}
-        onPress={() => handlePress(index)}
-      >
-        <Text>FINISH</Text>
+
+      <Text>Your guesses : </Text>
+      <ScrollView>
+        {guesses
+          .slice()
+          .reverse()
+          .map((guess, index) => (
+            <View key={index} style={styles.guess}>
+              <View style={styles.textAndCircleContainer}>
+                <Text style={styles.textAboveCircle}>{guess.short_name}</Text>
+                <View style={styles.circleContainer}>
+                  {renderCircles(guess, guesses.length - 1 - index)}
+                </View>
+              </View>
+            </View>
+          ))}
+      </ScrollView>
+      <View style={styles.searchContainer}>
+        <SearchPlayer
+          visible={isModalVisible}
+          onClose={toggleModal}
+          forceRefresh={forceRefresh}
+          guesses={guesses}
+          level={`Career${index}`}
+        />
+      </View>
+      {(guesses.length == 0 ||
+        player != guesses[guesses.length - 1].player_id) && (
+        <TouchableOpacity
+          key={`searchButton-${index}`}
+          style={styles.touchableOpacity}
+          onPress={() => toggleModal()}
+        >
+          <Text>SEARCH</Text>
+        </TouchableOpacity>
+      )}
+      {guesses.length != 0 &&
+        player == guesses[guesses.length - 1].player_id && (
+          <TouchableOpacity
+            key={`finishButton-${index}`}
+            style={styles.touchableOpacity}
+            onPress={() => handlePress(index)}
+          >
+            <Text>FINISH</Text>
+          </TouchableOpacity>
+        )}
+      <TouchableOpacity onPress={() => clear()}>
+        <Text>CLEAR</Text>
       </TouchableOpacity>
     </View>
   );
@@ -331,14 +508,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#008000",
+    padding: 10, // Add padding to the whole container
   },
   titleContainer: {
     alignItems: "center",
-    marginTop: 50,
+    marginTop: 20, // Reduce top margin for title
   },
   title: {
-    fontSize: 30,
+    fontSize: 24, // Adjust title font size
     color: "white",
+    marginBottom: 20,
   },
   club: {
     backgroundColor: "white",
@@ -356,11 +535,59 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
-    height: 100,
+    height: 50,
   },
   clubLogo: {
     width: 30,
     height: 30,
     resizeMode: "cover",
+  },
+  guess: {
+    backgroundColor: "#B3EFB2",
+    padding: 10,
+    margin: 5,
+    alignItems: "center",
+    borderRadius: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  searchContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  circleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circle: {
+    width: Dimensions.get("window").width * 0.15,
+    height: Dimensions.get("window").width * 0.15,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 7,
+  },
+  circleText: {
+    textAlign: "center",
+    textAlignVertical: "center",
+  },
+  greenCircle: {
+    backgroundColor: "green",
+  },
+  redCircle: {
+    backgroundColor: "red",
+  },
+  orangeCircle: {
+    backgroundColor: "orange",
+  },
+  textAndCircleContainer: {
+    alignItems: "center",
+  },
+  textAboveCircle: {
+    textAlign: "center",
+    marginBottom: 5,
   },
 });

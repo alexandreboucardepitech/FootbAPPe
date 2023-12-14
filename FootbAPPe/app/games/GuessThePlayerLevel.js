@@ -20,14 +20,18 @@ export default function GuessPlayerNameLevel() {
   const [guesses, setGuesses] = useState([]);
   const [playerToGuess, setPlayerToGuess] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
 
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
   const clear = () => {
     SimpleStore.delete(`guessesLevel${index}`);
     setGuesses([]);
-    SimpleStore.delete(`guessesLevelLogos${index}`);
   };
 
   const handlePress = (level) => {
@@ -163,7 +167,10 @@ export default function GuessPlayerNameLevel() {
           forceRefresh={forceRefresh}
           guesses={guesses}
           level={index}
+          visible={isModalVisible}
+          onClose={toggleModal}
         />
+
         <View style={{ flex: 1, justifyContent: "flex-end" }}>
           <ScrollView>
             {guesses
@@ -194,6 +201,17 @@ export default function GuessPlayerNameLevel() {
             <Text>FINISH</Text>
           </TouchableOpacity>
         )}
+
+      {(guesses.length == 0 ||
+        player != guesses[guesses.length - 1].player_id) && (
+        <TouchableOpacity
+          key={`searchButton-${index}`}
+          style={styles.touchableOpacity}
+          onPress={() => toggleModal()}
+        >
+          <Text>SEARCH</Text>
+        </TouchableOpacity>
+      )}
       <TouchableOpacity onPress={() => clear()}>
         <Text>CLEAR</Text>
       </TouchableOpacity>
@@ -221,7 +239,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
-    height: 100,
+    height: 50,
   },
   guess: {
     backgroundColor: "#B3EFB2",
