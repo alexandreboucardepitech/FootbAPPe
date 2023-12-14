@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
+import SimpleStore from "react-native-simple-store";
 
 export default function CareerTracer() {
   const route = useRoute();
@@ -31,6 +32,15 @@ export default function CareerTracer() {
     "Ludovic Blas",
     "Alex Grimaldo"
   ];
+
+  SimpleStore.get("CareerTracerLevel")
+    .then((value) => {
+      console.log("Retrieved data level: ", value);
+      setActualLevel(value - 1);
+    })
+    .catch((error) => {
+      console.log("Error retrieving data: ", error);
+    });
 
   useEffect(() => {
     setActualLevel(route.params?.level);

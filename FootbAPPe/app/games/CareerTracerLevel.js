@@ -8,6 +8,7 @@ import {
   Image,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import SimpleStore from "react-native-simple-store";
 
 export default function CareerTracerLevel() {
   const navigation = useNavigation();
@@ -20,8 +21,26 @@ export default function CareerTracerLevel() {
   const [progression, setProgression] = useState(1);
 
   const handlePress = (level) => {
+    SimpleStore.save("CareerTracerLevel", level)
+      .then(() => {
+        console.log("Data saved successfully!");
+      })
+      .catch((error) => {
+        console.log("Error saving data: ", error);
+      });
     navigation.navigate("CareerTracer", { level: level - 1 });
   };
+
+  const upgradeProgression = () => {
+    SimpleStore.save(`CareerTracerLevel${index}Progression`, progression + 1)
+      .then(() => {
+        console.log("Data saved successfully!");
+      })
+      .catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    setProgression(progression + 1);
+  }
 
   const careers = [
     {
@@ -265,6 +284,15 @@ export default function CareerTracerLevel() {
     }
   };
 
+  SimpleStore.get(`CareerTracerLevel${index}Progression`)
+    .then((value) => {
+      console.log("Retrieved data level: ", value);
+      setProgression(value);
+    })
+    .catch((error) => {
+      console.log("Error retrieving data: ", error);
+    });
+
   useEffect(() => {
     setPlayerCareer(getplayerCareer());
   }, [route.params?.level]);
@@ -293,7 +321,7 @@ export default function CareerTracerLevel() {
       <TouchableOpacity
         key={`nextButton-${index}`} // Unique key for next button
         style={styles.touchableOpacity}
-        onPress={() => setProgression(progression + 1)}
+        onPress={() => upgradeProgression()}
       >
         <Text>Next</Text>
       </TouchableOpacity>
@@ -328,7 +356,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
-    height: 100,
+    height: 60,
   },
   touchableOpacity: {
     backgroundColor: "#B3EFB2",
@@ -340,8 +368,8 @@ const styles = StyleSheet.create({
     height: 100,
   },
   clubLogo: {
-    width: 60,
-    height: 60,
+    width: 30,
+    height: 30,
     resizeMode: "cover",
   },
 });
