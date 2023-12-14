@@ -8,13 +8,13 @@ export default function CarrerTracer() {
   const [actualLevel, setActualLevel] = useState(route.params?.level);
 
   const idArray = [
-    165153, //Karim Benzema
+    20801, //Cristiano Ronaldo
     194765, //Antoine Griezmann
     167948, //Hugo Lloris
     183898, //Di Maria
+    213345, //Kingsley Coman
     189509, //Thiago Alcantara
     201153, //Alvaro Morata
-    245367, //Xavi Simons
     241721, //Rafael Leao
     231102, //Ludovic Blas
     210035, //Alex Grimaldo
