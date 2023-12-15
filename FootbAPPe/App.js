@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import * as Notifications from "expo-notifications";
+import registerNNPushToken from 'native-notify';
 
 import Menu from "./app/Menu.js";
 import GameMenu from "./app/GameMenu.js";
@@ -17,91 +17,77 @@ import GuessThePlayerLevel from "./app/games/GuessThePlayerLevel.js";
 
 const Stack = createStackNavigator();
 
-export default function App() {
-  useEffect(() => {
-    const requestNotificationPermissions = async () => {
-      try {
-        const { status } = await Notifications.requestPermissionsAsync();
-        if (status === "granted") {
-          Notifications.scheduleNotificationAsync({
-            content: {
-              title: "Welcome to Your App!",
-              body: "Test",
-            },
-            trigger: {
-              seconds: 5,
-            },
-          });
-        } else {
-          console.log("Permission not granted!");
-        }
-      } catch (error) {
-        console.error("Error requesting permissions:", error);
-      }
-    };
-
-    requestNotificationPermissions();
-  }, []);
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Menu">
-        <Stack.Screen
-          name="Menu"
-          component={Menu}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="GameMenu"
-          component={GameMenu}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Credits"
-          component={Credits}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="GuessThePlayer"
-          component={GuessThePlayer}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="GuessThePlayerLevel"
-          component={GuessThePlayerLevel}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="GuessPlayerName"
-          component={GuessPlayerName}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="GuessPlayerNameLevel"
-          component={GuessPlayerNameLevel}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CarrerTracer"
-          component={CarrerTracer}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CarrerTracerLevel"
-          component={CarrerTracerLevel}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Starting11"
-          component={Starting11}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Starting11Level"
-          component={Starting11Level}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+function wrapClassInHook(Component) {
+  return function WrappedComponent(props) {
+    registerNNPushToken(16802, "WDR7IPrySPGOg7hRxKzGsE");
+    return <Component />;
+  };
 }
+
+class App extends React.Component {
+  render() {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Menu">
+          <Stack.Screen
+            name="Menu"
+            component={Menu}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="GameMenu"
+            component={GameMenu}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Credits"
+            component={Credits}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="GuessThePlayer"
+            component={GuessThePlayer}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="GuessThePlayerLevel"
+            component={GuessThePlayerLevel}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="GuessPlayerName"
+            component={GuessPlayerName}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="GuessPlayerNameLevel"
+            component={GuessPlayerNameLevel}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CarrerTracer"
+            component={CarrerTracer}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CarrerTracerLevel"
+            component={CarrerTracerLevel}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Starting11"
+            component={Starting11}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Starting11Level"
+            component={Starting11Level}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+}
+
+export default wrapClassInHook(App);
