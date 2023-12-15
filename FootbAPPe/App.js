@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import * as Notifications from "expo-notifications";
 
 import Menu from "./app/Menu.js";
 import GameMenu from "./app/GameMenu.js";
@@ -17,6 +18,31 @@ import GuessThePlayerLevel from "./app/games/GuessThePlayerLevel.js";
 const Stack = createStackNavigator();
 
 export default function App() {
+  useEffect(() => {
+    const requestNotificationPermissions = async () => {
+      try {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status === "granted") {
+          Notifications.scheduleNotificationAsync({
+            content: {
+              title: "Welcome to Your App!",
+              body: "Test",
+            },
+            trigger: {
+              seconds: 5,
+            },
+          });
+        } else {
+          console.log("Permission not granted!");
+        }
+      } catch (error) {
+        console.error("Error requesting permissions:", error);
+      }
+    };
+
+    requestNotificationPermissions();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Menu">
