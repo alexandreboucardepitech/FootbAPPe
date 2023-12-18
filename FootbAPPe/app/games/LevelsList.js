@@ -26,8 +26,7 @@ const LevelsList = ({ stringsArray, idArray, actualLevel, redirection }) => {
           style={styles.touchableOpacity}
           onPress={() =>
             handlePress(
-              redirection == "GuessPlayerNameLevel" ||
-                redirection == "Starting11Level"
+              redirection == "GuessPlayerNameLevel"
                 ? stringsArray[index]
                 : text,
               index

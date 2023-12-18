@@ -7,29 +7,40 @@ export default function Starting11() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
   const idArray = [
-    165153, //Karim Benzema
-    194765, //Antoine Griezmann
-    167948, //Hugo Lloris
-    183898, //Di Maria
-    189509, //Thiago Alcantara
-    201153, //Alvaro Morata
-    245367, //Xavi Simons
-    241721, //Rafael Leao
-    231102, //Ludovic Blas
-    210035, //Alex Grimaldo
-  ];
-  const stringsArray = [
     [
-      [null, 322532, null],
-      [194766, null, 194764],
-      [null, 165153, null],
+      [null, 239085, null],
+      [206517, null, 237692],
+      [null, 192985, null],
       [null, null],
-      [532532, null, 194767],
+      [231866, null, 218667],
       [null, null, null],
       [null, null],
-      [532652, 194761, null, 194767, 754754],
+      [251517, 239818, null, 208920, 188377],
       [210257],
     ],
+    [
+      [null, 239085, null],
+      [206517, null, 237692],
+      [null, 192985, null],
+      [null, null],
+      [231866, null, 218667],
+      [null, null, null],
+      [null, null],
+      [251517, 239818, null, 208920, 188377],
+      [210257],
+    ],
+  ];
+  const stringsArray = [
+      "Manchester City",
+      "FC Barcelone",
+      "Olympique de Marseille",
+      "Borussia Dortmund",
+      "Aston Villa",
+      "Bayer Leverkusen",
+      "AS Roma",
+      "Séville FC",
+      "PSV Eindhoven",
+      "FC Nantes",
   ];
 
   useEffect(() => {
