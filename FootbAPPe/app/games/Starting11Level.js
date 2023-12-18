@@ -23,7 +23,19 @@ export default function Starting11Level() {
   const team = route.params?.text;
 
   const [position, setPosition] = useState(null);
-  const [rightPlayer, setRightPlayer] = useState([false, false, false, false, false, false, false, false, false, false, false]);
+  const [rightPlayer, setRightPlayer] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [positionOfPlayer, setPositionOfPlayer] = useState(null);
 
   const handlePress = (level) => {
@@ -36,7 +48,7 @@ export default function Starting11Level() {
     setRightPlayer(rightPlayers);
     setModalVisible(!modalVisible);
     console.log(rightPlayer);
-  }
+  };
 
   const checkPosition = (rowIndex) => {
     if (rowIndex === 0) {
@@ -90,29 +102,30 @@ export default function Starting11Level() {
       ["g"],
     ];
 
-    return (
+    return(
       <View style={styles.playersContainer}>
-        {playerPositions.map((row, rowIndex) => (
+        {team.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.rowContainer}>
-            {row &&
-              row.map((position, colIndex) => (
-                <TouchableOpacity
-                  key={colIndex}
-                  onPress={() => toggleModal(position, colIndex)}
-                  style={{
-                    ...checkPosition(rowIndex),
-                    height: width * 0.13,
-                    width: width * 0.13,
-                    borderRadius: 100,
-                    margin: width * 0.02,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: checkPositionPlayer(position)
-                      ? "white"
-                      : null,
-                  }}
-                ></TouchableOpacity>
-              ))}
+            {row.map((position, index) => (
+              <View key={index}>
+                {position != null && (
+                  <TouchableOpacity
+                    style={{
+                      height: width * 0.13,
+                      width: width * 0.13,
+                      borderRadius: 100,
+                      margin: width * 0.07,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: rightPlayer[index] ? "#00FF00" : "white",
+                    }}
+                    onPress={() => toggleModal(index, position, setPosition)}
+                  >
+                    {rightPlayer[index] && <Text>✓</Text>}
+                  </TouchableOpacity>
+                )}
+              </View>
+            ))}
           </View>
         ))}
         <Modal
@@ -126,7 +139,12 @@ export default function Starting11Level() {
           <View style={styles.modalContainer}>
             <View style={styles.modalView}>
               <Text>Modal Content Goes Here</Text>
-              <SearchPlayerS11 level={index} position={position} setGoodPosition={setGoodPosition} positionOfPlayer={positionOfPlayer}/>
+              <SearchPlayerS11
+                level={index}
+                position={position}
+                setGoodPosition={setGoodPosition}
+                positionOfPlayer={positionOfPlayer}
+              />
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);
@@ -173,29 +191,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     paddingTop: height * 0.03,
   },
-  row1Style: {
-    marginHorizontal: width * -0.15,
-  },
-  row2Style: {
-    marginHorizontal: width * 0.15,
-  },
-  row3Style: {
-    marginHorizontal: width * -0.15,
-  },
-  row4Style: {
-    marginHorizontal: width * 0.5,
-  },
-  row5Style: {
-    marginHorizontal: width * -0.15,
-  },
-  row6Style: {
-    marginHorizontal: width * -0.15,
-  },
-  row7Style: {
-    marginHorizontal: width * 0.5,
-  },
-  row8Style: {},
-  row9Style: {},
   centeredView: {
     flex: 1,
     justifyContent: "center",

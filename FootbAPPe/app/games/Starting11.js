@@ -20,17 +20,15 @@ export default function Starting11() {
   ];
   const stringsArray = [
     [
-      ["g", 210257],
-      ["dd", 194763],
-      ["dcg", 194761],
-      ["dcd", 194767],
-      ["dg", 194764],
-      ["mcg", 194768],
-      ["mcd", 194767],
-      ["moc", 194765],
-      ["ag", 194766],
-      ["ad", 194764],
-      ["bu", 194769],
+      [null, 322532, null],
+      [194766, null, 194764],
+      [null, 165153, null],
+      [null, null],
+      [532532, null, 194767],
+      [null, null, null],
+      [null, null],
+      [532652, 194761, null, 194767, 754754],
+      [210257],
     ],
   ];
 
