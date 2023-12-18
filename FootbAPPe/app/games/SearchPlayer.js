@@ -47,9 +47,9 @@ const SearchPlayer = ({ forceRefresh, guesses, level }) => {
   };
 
   const fetchData = () => {
-    console.log("request /", NGROK_URL);
+    console.log("request /", "http://34.163.192.106:5002");
     axios
-      .get(`${NGROK_URL}/api/player/${searchText}`, {
+      .get(`http://34.163.192.106:5002/api/player/${searchText}`, {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",

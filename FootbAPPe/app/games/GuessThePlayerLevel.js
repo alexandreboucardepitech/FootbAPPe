@@ -43,9 +43,9 @@ export default function GuessPlayerNameLevel() {
   };
 
   const getPlayerToGuess = (playerId) => {
-    console.log("request /", NGROK_URL);
+    console.log("request /", "http://34.163.192.106:5002");
     axios
-      .get(`${NGROK_URL}/api/player/${playerId}`, {
+      .get(`http://34.163.192.106:5002/api/player/${playerId}`, {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
