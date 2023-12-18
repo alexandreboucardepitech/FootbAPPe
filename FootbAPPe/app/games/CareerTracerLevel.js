@@ -75,23 +75,18 @@ export default function CareerTracerLevel() {
 
   useEffect(() => {
     if (playerCareer && player) {
-      console.log("eh oui");
       SimpleStore.get(`guessesLevelCareer${index}`)
         .then((value) => {
           if (value) {
-            console.log("guesses : ", guesses, " / value : ", value);
             setGuesses(value);
             changeProgression(value.length + 1);
           } else {
             changeProgression(1);
-            console.log("en fait non");
           }
         })
         .catch((error) => {
           console.log("Error retrieving data: ", error);
         });
-    } else {
-      console.log("eh non");
     }
   }, [playerToGuess, playerCareer, refreshTrigger]);
 
@@ -329,7 +324,6 @@ export default function CareerTracerLevel() {
 
     if (foundCareer) {
       forceRefresh();
-      console.log("fini");
       getPlayerToGuess(foundCareer.player);
       return foundCareer.career;
     } else {
@@ -364,7 +358,6 @@ export default function CareerTracerLevel() {
   };
 
   const forceRefresh = () => {
-    console.log("refresh");
     setRefreshTrigger(Date.now());
   };
   const renderCircles = (guess, playerIndex) => {
