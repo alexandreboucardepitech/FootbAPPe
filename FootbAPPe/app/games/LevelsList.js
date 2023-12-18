@@ -24,15 +24,22 @@ const LevelsList = ({ stringsArray, idArray, actualLevel, redirection }) => {
         <TouchableOpacity
           key={index}
           style={styles.touchableOpacity}
-          onPress={() => handlePress(redirection == "GuessPlayerNameLevel" || redirection == "Starting11Level" ? stringsArray[index] : text, index)}
+          onPress={() =>
+            handlePress(
+              redirection == "GuessPlayerNameLevel" ||
+                redirection == "Starting11Level"
+                ? stringsArray[index]
+                : text,
+              index
+            )
+          }
         >
-          <Text>{index > actualLevel ? `Level ${index + 1}` : stringsArray[index]}</Text>
+          <Text>
+            {index > actualLevel ? `Level ${index + 1}` : stringsArray[index]}
+          </Text>
           {index > actualLevel + 1 && (
-          <Image
-            source={imageLocked}
-            style={styles.imageStyle}
-          />
-        )}
+            <Image source={imageLocked} style={styles.imageStyle} />
+          )}
         </TouchableOpacity>
       ))}
     </ScrollView>
@@ -56,7 +63,7 @@ const styles = StyleSheet.create({
   imageStyle: {
     width: 80,
     height: 80,
-    position: 'absolute',
+    position: "absolute",
     right: 10,
   },
 });

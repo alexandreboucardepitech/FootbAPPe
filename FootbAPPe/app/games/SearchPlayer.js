@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { NGROK_URL } from "@env";
-import not_found from "../../assets/not_found.png";
-import { StatusBar } from "expo-status-bar";
 import {
+  Modal,
   StyleSheet,
   Text,
   View,
@@ -13,10 +10,15 @@ import {
   ImageBackground,
   ScrollView,
   KeyboardAvoidingView,
+  Dimensions,
 } from "react-native";
 import SimpleStore from "react-native-simple-store";
+import axios from "axios";
+import { NGROK_URL } from "@env";
+import not_found from "../../assets/not_found.png";
+import { StatusBar } from "expo-status-bar";
 
-const SearchPlayer = ({ forceRefresh, guesses, level }) => {
+const SearchPlayer = ({ visible, onClose, forceRefresh, guesses, level }) => {
   const [responseData, setResponseData] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -31,23 +33,23 @@ const SearchPlayer = ({ forceRefresh, guesses, level }) => {
 
   const handlePress = (player) => {
     if (!guesses.includes(player)) {
-      SimpleStore.save(`guessesLevel${level}`, [...guesses, player])
-        .then(() => {
-          console.log("Data saved successfully!", [...guesses, player]);
-        })
-        .catch((error) => {
+      SimpleStore.save(`guessesLevel${level}`, [...guesses, player]).catch(
+        (error) => {
           console.log("Error saving data: ", error);
-        });
+        }
+      );
       setResponseData(null);
       setSearchText(null);
       forceRefresh();
+      onClose();
     }
   };
 
   const fetchData = () => {
-    console.log("request /", NGROK_URL);
+    console.log("couocu : ", level);
+    console.log("request /", "http://34.163.192.106:5002");
     axios
-      .get(`${NGROK_URL}/api/player/${searchText}`, {
+      .get(`http://34.163.192.106:5002/api/player/${searchText}`, {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -63,51 +65,90 @@ const SearchPlayer = ({ forceRefresh, guesses, level }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={fetchData}>
-        <Text style={styles.buttonText}> SEARCH </Text>
-      </TouchableOpacity>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalView}>
+          <TouchableOpacity
+            onPress={() => {
+              onClose();
+            }}
+          >
+            <Text>Close Search System</Text>
+          </TouchableOpacity>
+          {level.substring(0, 8) == "Starting" && <Text>Guesses :</Text>}
+          {level.substring(0, 8) == "Starting" &&
+            guesses.map((guess, indexGuess) => <Text>{guess.short_name}</Text>)}
+          <TouchableOpacity style={styles.button} onPress={fetchData}>
+            <Text style={styles.buttonText}> SEARCH </Text>
+          </TouchableOpacity>
 
-      <KeyboardAvoidingView>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search a player"
-          value={searchText}
-          onChangeText={setSearchText}
-        />
-      </KeyboardAvoidingView>
+          <KeyboardAvoidingView>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search a player"
+              value={searchText}
+              onChangeText={setSearchText}
+            />
+          </KeyboardAvoidingView>
 
-      {responseData && (
-        <View style={styles.responseContainer}>
-          <ScrollView>
-            {responseData.map((player, index) => (
-              <TouchableOpacity key={index} onPress={() => handlePress(player)}>
-                <Text>{player.short_name}</Text>
-                <ImageBackground style={styles.playerImage} source={not_found}>
-                  <Image
-                    style={styles.playerImage}
-                    source={{
-                      uri: `https://cdn.sofifa.net/players/${formatPlayerId(
-                        player.player_id.toString()
-                      )}/24_120.png`,
-                    }}
-                  />
-                </ImageBackground>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          {responseData && (
+            <View style={styles.responseContainer}>
+              <ScrollView>
+                {responseData.map((player, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handlePress(player)}
+                  >
+                    <Text>{player.short_name}</Text>
+                    <ImageBackground
+                      style={styles.playerImage}
+                      source={not_found}
+                    >
+                      <Image
+                        style={styles.playerImage}
+                        source={{
+                          uri: `https://cdn.sofifa.net/players/${formatPlayerId(
+                            player.player_id.toString()
+                          )}/24_120.png`,
+                        }}
+                      />
+                    </ImageBackground>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+          <StatusBar style="auto" />
         </View>
-      )}
-      <StatusBar style="auto" />
-    </View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  modalContainer: {
     flex: 1,
-    backgroundColor: "#008000",
+    justifyContent: "flex-end",
+  },
+  modalView: {
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 35,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   button: {
     borderColor: "gray",
@@ -117,7 +158,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonText: {
-    color: "white",
+    color: "#008000",
     fontSize: 16,
     textAlign: "center",
   },

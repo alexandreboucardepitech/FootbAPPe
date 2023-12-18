@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  ImageBackground,
-  Text,
-} from "react-native";
+import { StyleSheet, View, ImageBackground, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 

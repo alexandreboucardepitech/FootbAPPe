@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -9,9 +9,9 @@ import {
 } from "react-native";
 import { StatusBar, Dimensions } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import axios from "axios";
-import SearchPlayerS11 from "./SearchPlayerS11.js";
+import SearchPlayer from "./SearchPlayer.js";
 import backgroundGame from "../../assets/backgroundGame.jpg";
+import SimpleStore from "react-native-simple-store";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,33 +22,47 @@ export default function Starting11Level() {
   const index = route.params?.index + 1;
   const team = route.params?.text;
 
-  const [position, setPosition] = useState(null);
+  const [player, setPlayer] = useState(null);
   const [rightPlayer, setRightPlayer] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
+    [false, false, false],
+    [false, false, false],
+    [false, false, false],
+    [false, false],
+    [false, false, false],
+    [false, false, false],
+    [false, false],
+    [false, false, false, false, false],
+    [false],
   ]);
-  const [positionOfPlayer, setPositionOfPlayer] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
+  const [guesses, setGuesses] = useState([
+    [[], [], []],
+    [[], [], []],
+    [[], [], []],
+    [[], []],
+    [[], [], []],
+    [[], [], []],
+    [[], []],
+    [[], [], [], [], []],
+    [[]],
+  ]);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
   const handlePress = (level) => {
     navigation.navigate("Starting11", { level: level - 1 });
   };
 
-  const setGoodPosition = (index) => {
-    let rightPlayers = rightPlayer;
-    rightPlayers[index] = true;
-    setRightPlayer(rightPlayers);
-    setModalVisible(!modalVisible);
-    console.log(rightPlayer);
-  };
+  // const setGoodPosition = (index) => {
+  //   let rightPlayers = rightPlayer;
+  //   rightPlayers[index] = true;
+  //   setRightPlayer(rightPlayers);
+  //   setModalVisible(!modalVisible);
+  //   console.log(rightPlayer);
+  // };
 
   const checkPosition = (rowIndex) => {
     if (rowIndex === 0) {
@@ -76,18 +90,116 @@ export default function Starting11Level() {
     return team.some((player) => player[0] === position);
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const openModal = (rowIndex, index) => {
+    console.log("here :", team[rowIndex][index]);
+    setPlayer(team[rowIndex][index]);
 
-  const toggleModal = (position, index) => {
-    team.map((player) => {
-      if (player[0] === position) {
-        setPosition(player[1]);
-        setPositionOfPlayer(index);
-      }
+    let found = false
+    guesses[rowIndex][index].forEach((guess, guessIndex) => {
+      if (guess.player_id == team[rowIndex][index])
+        found = true;
     });
-
-    setModalVisible(!modalVisible);
+    if (!found) {
+      setIsModalVisible(!isModalVisible);
+    }
   };
+
+  const forceRefresh = () => {
+    setRefreshTrigger(Date.now());
+  };
+
+  const getGuesses = () => {
+    let guessesToReturn = null;
+
+    team.forEach((rows, rowIndex) => {
+      rows.forEach((eachPlayer, index) => {
+        if (eachPlayer === player) {
+          guessesToReturn = guesses[rowIndex][index];
+        }
+      });
+    });
+    console.log("dbiabdazbdzoandzapndza", guessesToReturn);
+    return guessesToReturn;
+  };
+
+  const updateAllGuesses = () => {
+    team.forEach((rows, rowIndex) => {
+      rows.forEach((eachPlayer, columnIndex) => {
+        SimpleStore.get(`guessesLevelStarting${index}/${eachPlayer}`)
+          .then((value) => {
+            console.log("aaa");
+            if (value) {
+              console.log("values : ", value);
+              let guessesCopy = guesses;
+              guessesCopy[rowIndex][columnIndex] = value;
+              setGuesses(guessesCopy);
+
+              value.forEach((valuePlayers, valueIndex) => {
+                if (valuePlayers.player_id == team[rowIndex][columnIndex]) {
+                  let rightPlayersCopy = rightPlayer;
+                  rightPlayersCopy[rowIndex][columnIndex] = true;
+                  setRightPlayer(rightPlayersCopy);
+                  console.log("rightcopy : ", rightPlayersCopy);
+                }
+              });
+
+              if (
+                Array.isArray(value) &&
+                value.includes(team[rowIndex][columnIndex])
+              ) {
+                let rightPlayersCopy = rightPlayer;
+                rightPlayersCopy[rowIndex][columnIndex] = true;
+                setRightPlayer(rightPlayersCopy);
+                console.log("rightcopy : ", rightPlayersCopy);
+              }
+              console.log("rightplayer : ", rightPlayer);
+            }
+          })
+          .catch((error) => {
+            console.log("Error retrieving data: ", error);
+          });
+      });
+    });
+  };
+
+  useEffect(() => {
+    console.log("vvv");
+    // setGuesses([
+    //   [[], [], []],
+    //   [[], [], []],
+    //   [[], [], []],
+    //   [[], []],
+    //   [[], [], []],
+    //   [[], [], []],
+    //   [[], []],
+    //   [[], [], [], [], []],
+    //   [[]],
+    // ]);
+    if (player) {
+      updateAllGuesses();
+      // SimpleStore.get(`guessesLevelStarting${index}/165153`)
+      //   .then((value) => {
+      //     console.log("aaa");
+      //     if (value) {
+      //       console.log("values : ", value);
+      //       setGuesses([
+      //         [[], [], []],
+      //         [[], [], []],
+      //         [[], value, []],
+      //         [[], []],
+      //         [[], [], []],
+      //         [[], [], []],
+      //         [[], []],
+      //         [[], [], [], [], []],
+      //         [[]],
+      //       ]);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log("Error retrieving data: ", error);
+      //   });
+    }
+  }, [player, refreshTrigger]);
 
   const renderPlayers = () => {
     const playerPositions = [
@@ -102,59 +214,55 @@ export default function Starting11Level() {
       ["g"],
     ];
 
-    return(
+    return (
       <View style={styles.playersContainer}>
         {team.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.rowContainer}>
             {row.map((position, index) => (
               <View key={index}>
                 {position != null && (
-                  <TouchableOpacity
-                    style={{
-                      height: width * 0.13,
-                      width: width * 0.13,
-                      borderRadius: 100,
-                      margin: width * 0.07,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: rightPlayer[index] ? "#00FF00" : "white",
-                    }}
-                    onPress={() => toggleModal(index, position, setPosition)}
-                  >
-                    {rightPlayer[index] && <Text>✓</Text>}
-                  </TouchableOpacity>
+                  <View>
+                    <TouchableOpacity
+                      style={{
+                        height: width * 0.13,
+                        width: width * 0.13,
+                        borderRadius: 100,
+                        margin: width * 0.05,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor:
+                          rightPlayer[rowIndex][index] == true
+                            ? "#00FF00"
+                            : "white",
+                      }}
+                      onPress={() => openModal(rowIndex, index)}
+                    >
+                      {rightPlayer[rowIndex][index] == true && <Text>✓</Text>}
+                    </TouchableOpacity>
+                    {rightPlayer[rowIndex][index] == true && (
+                      <Text>
+                        {
+                          guesses[rowIndex][index][
+                            guesses[rowIndex][index].length - 1
+                          ].short_name
+                        }
+                      </Text>
+                    )}
+                  </View>
                 )}
               </View>
             ))}
           </View>
         ))}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalView}>
-              <Text>Modal Content Goes Here</Text>
-              <SearchPlayerS11
-                level={index}
-                position={position}
-                setGoodPosition={setGoodPosition}
-                positionOfPlayer={positionOfPlayer}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Text>Close Modal</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        <View style={styles.searchContainer}>
+          <SearchPlayer
+            visible={isModalVisible}
+            onClose={toggleModal}
+            forceRefresh={forceRefresh}
+            guesses={getGuesses()}
+            level={`Starting${index}/${player}`}
+          />
+        </View>
       </View>
     );
   };
@@ -176,6 +284,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#008000",
+  },
+  searchContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
   },
   image: {
     flex: 1,
