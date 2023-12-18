@@ -8,9 +8,9 @@ import GameMenu from "./app/GameMenu.js";
 import Credits from "./app/Credits.js";
 import GuessThePlayer from "./app/games/GuessThePlayer.js";
 import GuessPlayerName from "./app/games/GuessPlayerName.js";
-import CarrerTracer from "./app/games/CarrerTracer.js";
+import CareerTracer from "./app/games/CareerTracer.js";
 import Starting11 from "./app/games/Starting11.js";
-import CarrerTracerLevel from "./app/games/CarrerTracerLevel.js";
+import CareerTracerLevel from "./app/games/CareerTracerLevel.js";
 import GuessPlayerNameLevel from "./app/games/GuessPlayerNameLevel.js";
 import Starting11Level from "./app/games/Starting11Level.js";
 import GuessThePlayerLevel from "./app/games/GuessThePlayerLevel.js";
@@ -65,13 +65,13 @@ class App extends React.Component {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="CarrerTracer"
-            component={CarrerTracer}
+            name="CareerTracer"
+            component={CareerTracer}
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="CarrerTracerLevel"
-            component={CarrerTracerLevel}
+            name="CareerTracerLevel"
+            component={CareerTracerLevel}
             options={{ headerShown: false }}
           />
           <Stack.Screen
