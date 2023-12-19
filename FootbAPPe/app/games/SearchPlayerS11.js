@@ -32,7 +32,6 @@ const SearchPlayerS11 = ({ level, position, setGoodPosition, positionOfPlayer })
   const handlePress = (player) => {
     if (player.player_id == position) {
       setGoodPosition(positionOfPlayer);
-      console.log(positionOfPlayer);
       setResponseData(null);
       setSearchText(null);
     }

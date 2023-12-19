@@ -51,7 +51,6 @@ export default function Starting11Level() {
   const [coins, setCoins] = useState(0);
 
   const clear = () => {
-    console.log("clear : ", team);
     team.forEach((rows) => {
       rows.forEach((eachPlayer) => {
         SimpleStore.delete(`guessesLevelStarting${index}/${eachPlayer}`);
@@ -122,7 +121,6 @@ export default function Starting11Level() {
   };
 
   const openModal = (rowIndex, index) => {
-    console.log("here :", team[rowIndex][index]);
     setPlayer(team[rowIndex][index]);
 
     let found = false;
@@ -157,7 +155,6 @@ export default function Starting11Level() {
         SimpleStore.get(`guessesLevelStarting${index}/${eachPlayer}`)
           .then((value) => {
             if (value) {
-              console.log("values : ", value);
               let guessesCopy = guesses;
               guessesCopy[rowIndex][columnIndex] = value;
               setGuesses(guessesCopy);
@@ -167,7 +164,6 @@ export default function Starting11Level() {
                   let rightPlayersCopy = rightPlayer;
                   rightPlayersCopy[rowIndex][columnIndex] = true;
                   setRightPlayer(rightPlayersCopy);
-                  console.log("rightcopy : ", rightPlayersCopy);
                 }
               });
 
@@ -178,9 +174,7 @@ export default function Starting11Level() {
                 let rightPlayersCopy = rightPlayer;
                 rightPlayersCopy[rowIndex][columnIndex] = true;
                 setRightPlayer(rightPlayersCopy);
-                console.log("rightcopy : ", rightPlayersCopy);
               }
-              console.log("rightplayer : ", rightPlayer);
             }
           })
           .catch((error) => {
@@ -193,7 +187,6 @@ export default function Starting11Level() {
   useEffect(() => {
     updateAllGuesses();
     SimpleStore.get("coins").then((value) => {
-      console.log("Retrieved datadela: ", value);
       if (value) {
         setCoins(value);
       }

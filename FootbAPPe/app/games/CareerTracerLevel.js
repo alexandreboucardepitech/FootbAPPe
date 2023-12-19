@@ -350,7 +350,6 @@ export default function CareerTracerLevel() {
   useEffect(() => {
     setPlayerCareer(getplayerCareer());
     SimpleStore.get("coins").then((value) => {
-      console.log("Retrieved datadela: ", value);
       if (value) {
         setCoins(value);
       }

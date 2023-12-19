@@ -119,7 +119,6 @@ export default function GuessPlayerNameLevel() {
   };
 
   const handlePress = (level) => {
-    console.log("namepropo : ", nameProposition);
     SimpleStore.save(`GuessPlayerName${level}`, nameProposition).catch(
       (error) => {
         console.log("Error saving data: ", error);
@@ -128,7 +127,6 @@ export default function GuessPlayerNameLevel() {
     SimpleStore.save("coins", coins + 1).catch((error) => {
       console.log("Error saving data: ", error);
     });
-    console.log("level : ", level, " / actual : ", actualLevel);
     if (level >= actualLevel) {
       SimpleStore.save("GuessPlayerNameLevel", level).catch((error) => {
         console.log("Error saving data: ", error);
@@ -144,13 +142,11 @@ export default function GuessPlayerNameLevel() {
 
   useEffect(() => {
     SimpleStore.get("coins").then((value) => {
-      console.log("Retrieved datadela: ", value);
       if (value) {
         setCoins(value);
       }
     });
     SimpleStore.get(`GuessPlayerName${index}`).then((value) => {
-      console.log("récupéré : ", value);
       if (value) {
         setNameProposition(value);
         setNbLineOfCircles(value.length);

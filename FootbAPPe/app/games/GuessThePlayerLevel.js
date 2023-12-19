@@ -41,7 +41,6 @@ export default function GuessPlayerNameLevel() {
     SimpleStore.save("coins", coins + 1).catch((error) => {
       console.log("Error saving data: ", error);
     });
-    console.log("level : ", level, "actual: ", actualLevel);
     if (level >= actualLevel) {
       SimpleStore.save("level", level).catch((error) => {
         console.log("Error saving data: ", error);
@@ -71,7 +70,6 @@ export default function GuessPlayerNameLevel() {
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
     SimpleStore.get("coins").then((value) => {
-      console.log("Retrieved datadela: ", value);
       if (value) {
         setCoins(value);
       }

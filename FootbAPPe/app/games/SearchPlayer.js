@@ -46,7 +46,6 @@ const SearchPlayer = ({ visible, onClose, forceRefresh, guesses, level }) => {
   };
 
   const fetchData = () => {
-    console.log("couocu : ", level);
     console.log("request /", "http://34.163.192.106:5002");
     axios
       .get(`http://34.163.192.106:5002/api/player/${searchText}`, {
