@@ -12,7 +12,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { NGROK_URL } from "@env";
 import axios from "axios";
 import SimpleStore from "react-native-simple-store";
-import DisplayCoins from "../DisplayCoins.js"
+import DisplayCoins from "../DisplayCoins.js";
 
 export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
@@ -37,14 +37,12 @@ export default function GuessPlayerNameLevel() {
   };
 
   const handlePress = (level) => {
-    SimpleStore.save("coins", coins + 1)
-      .catch((error) => {
-        console.log("Error saving data: ", error);
-      });
-    SimpleStore.save("level", level)
-      .catch((error) => {
-        console.log("Error saving data: ", error);
-      });
+    SimpleStore.save("coins", coins + 1).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
+    SimpleStore.save("level", level).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
     SimpleStore.save("level", level).catch((error) => {
       console.log("Error saving data: ", error);
     });
@@ -71,12 +69,12 @@ export default function GuessPlayerNameLevel() {
 
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
-    SimpleStore.get("coins")
-    .then((value) => {
+    SimpleStore.get("coins").then((value) => {
       console.log("Retrieved datadela: ", value);
-      if (value)
+      if (value) {
         setCoins(value);
-    })
+      }
+    });
   }, [route.params?.text]);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -9,6 +9,8 @@ import {
   ImageBackground,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import SimpleStore from "react-native-simple-store";
+import DisplayCoins from "../DisplayCoins.js";
 
 import backgroundGame from "../../assets/backgroundGame.jpg";
 
@@ -26,6 +28,7 @@ export default function GuessPlayerNameLevel() {
   const isSameLength = player.length === inputText.length;
   const isSameText = player === inputText;
   const [nbLineOfCircles, setNbLineOfCircles] = useState(1);
+  const [coins, setCoins] = useState(0);
 
   const circles = Array.from(
     { length: player.length },
@@ -112,8 +115,20 @@ export default function GuessPlayerNameLevel() {
   };
 
   const handlePress = (level) => {
+    SimpleStore.save("coins", coins + 1).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
     navigation.navigate("GuessPlayerName", { level: level - 1 });
   };
+
+  useEffect(() => {
+    SimpleStore.get("coins").then((value) => {
+      console.log("Retrieved datadela: ", value);
+      if (value) {
+        setCoins(value);
+      }
+    });
+  }, [route.params?.text]);
 
   return (
     <View style={styles.container}>
@@ -122,6 +137,10 @@ export default function GuessPlayerNameLevel() {
         resizeMode="cover"
         style={styles.image}
       > */}
+      <DisplayCoins></DisplayCoins>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>{`Guess Player Name : Level ${index}`}</Text>
+      </View>
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
@@ -156,6 +175,14 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "center",
+  },
+  titleContainer: {
+    alignItems: "center",
+    marginTop: 60,
+  },
+  title: {
+    fontSize: 20,
+    color: "white",
   },
   scrollView: {
     marginTop: "33%",

@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
+import DisplayCoins from "../DisplayCoins.js";
 
 export default function GuessPlayerName() {
   const route = useRoute();
@@ -39,6 +40,7 @@ export default function GuessPlayerName() {
 
   return (
     <View style={styles.container}>
+      <DisplayCoins></DisplayCoins>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Guess Player Name</Text>
       </View>

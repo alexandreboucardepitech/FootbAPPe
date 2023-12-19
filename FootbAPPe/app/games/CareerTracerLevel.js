@@ -13,6 +13,7 @@ import SimpleStore from "react-native-simple-store";
 import SearchPlayer from "./SearchPlayer.js";
 import { NGROK_URL } from "@env";
 import axios from "axios";
+import DisplayCoins from "../DisplayCoins.js";
 
 export default function CareerTracerLevel() {
   const navigation = useNavigation();
@@ -27,12 +28,16 @@ export default function CareerTracerLevel() {
   const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
   const [playerToGuess, setPlayerToGuess] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [coins, setCoins] = useState(0);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
   const handlePress = (level) => {
+    SimpleStore.save("coins", coins + 1).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
     SimpleStore.save("CareerTracerLevel", level).catch((error) => {
       console.log("Error saving data: ", error);
     });
@@ -341,6 +346,12 @@ export default function CareerTracerLevel() {
 
   useEffect(() => {
     setPlayerCareer(getplayerCareer());
+    SimpleStore.get("coins").then((value) => {
+      console.log("Retrieved datadela: ", value);
+      if (value) {
+        setCoins(value);
+      }
+    });
   }, [route.params?.level]);
 
   const getCircleColor = (playerPos, guessPos) => {
@@ -423,6 +434,7 @@ export default function CareerTracerLevel() {
 
   return (
     <View style={styles.container}>
+      <DisplayCoins></DisplayCoins>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{`Career Tracer : Level ${index}`}</Text>
       </View>
@@ -505,7 +517,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: "center",
-    marginTop: 20, // Reduce top margin for title
+    marginTop: 50, // Reduce top margin for title
   },
   title: {
     fontSize: 24, // Adjust title font size

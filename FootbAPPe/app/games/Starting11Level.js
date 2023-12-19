@@ -12,6 +12,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import backgroundGame from "../../assets/backgroundGame.jpg";
 import SimpleStore from "react-native-simple-store";
+import DisplayCoins from "../DisplayCoins.js";
 
 const { width, height } = Dimensions.get("window");
 
@@ -46,6 +47,7 @@ export default function Starting11Level() {
     [[]],
   ]);
   const [started, setStarted] = useState(false);
+  const [coins, setCoins] = useState(0);
 
   const clear = () => {
     console.log("clear : ", team);
@@ -81,6 +83,9 @@ export default function Starting11Level() {
   };
 
   const handlePress = (level) => {
+    SimpleStore.save("coins", coins + 1).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
     navigation.navigate("Starting11", { level: level - 1 });
   };
 
@@ -181,6 +186,12 @@ export default function Starting11Level() {
 
   useEffect(() => {
     updateAllGuesses();
+    SimpleStore.get("coins").then((value) => {
+      console.log("Retrieved datadela: ", value);
+      if (value) {
+        setCoins(value);
+      }
+    });
   }, [guesses, refreshTrigger]);
 
   const renderPlayers = () => {
@@ -241,6 +252,7 @@ export default function Starting11Level() {
     <View style={styles.container}>
       {!started ? (
         <View style={styles.startTitleContainer}>
+          <DisplayCoins key={"Starting11Title"}></DisplayCoins>
           <Text style={styles.startTitle}>{`Level ${index} : ${
             levels[index - 1]
           }\n`}</Text>
@@ -261,6 +273,7 @@ export default function Starting11Level() {
           resizeMode="cover"
           style={styles.image}
         >
+          <DisplayCoins key={"Starting11"}></DisplayCoins>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{`Level ${index} : ${
               levels[index - 1]
@@ -292,10 +305,10 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 50,
   },
   title: {
-    fontSize: 24, // Adjust title font size
+    fontSize: 24,
     color: "white",
     marginBottom: 20,
   },

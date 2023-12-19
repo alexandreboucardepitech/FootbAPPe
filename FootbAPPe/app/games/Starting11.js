@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
+import DisplayCoins from "../DisplayCoins.js";
 
 export default function Starting11() {
   const route = useRoute();
@@ -127,6 +128,7 @@ export default function Starting11() {
 
   return (
     <View style={styles.container}>
+      <DisplayCoins></DisplayCoins>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Starting 11</Text>
       </View>
