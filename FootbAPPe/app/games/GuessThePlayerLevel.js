@@ -183,7 +183,7 @@ export default function GuessPlayerNameLevel() {
         <SearchPlayer
           forceRefresh={forceRefresh}
           guesses={guesses}
-          level={index}
+          level={`${index}`}
           visible={isModalVisible}
           onClose={toggleModal}
         />
