@@ -2,18 +2,22 @@ import React, { useState } from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
 import SimpleStore from "react-native-simple-store";
 import imageCoin from "../assets/coin.png";
+import { useFocusEffect } from '@react-navigation/native';
 
 const DisplayCoins = () => {
   const [coins, setCoins] = useState(0);
 
-  SimpleStore.get("coins")
-    .then((value) => {
-      console.log("Retrieved data: ", value);
-      setCoins(value);
-    })
-    .catch((error) => {
-      console.log("Error retrieving data: ", error);
-    });
+  useFocusEffect(
+    React.useCallback(() => {
+      SimpleStore.get("coins")
+        .then((value) => {
+          setCoins(value);
+        })
+        .catch((error) => {
+          console.log("Error retrieving data: ", error);
+        });
+    }, [])
+  );
 
   return (
     <View style={styles.coinContainer}>

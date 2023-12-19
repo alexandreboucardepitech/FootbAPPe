@@ -122,29 +122,25 @@ export default function GuessPlayerNameLevel() {
         resizeMode="cover"
         style={styles.image}
       > */}
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.scrollView}
-          onContentSizeChange={() => {
-            scrollViewRef.current.scrollToEnd({ animated: true });
-          }}
-        >
-          <View style={styles.lineContainer}>{circleLine()}</View>
-        </ScrollView>
-        <TextInput
-          style={styles.inputText}
-          placeholder="Player name"
-          value={inputText}
-          autoCapitalize="characters"
-          onChangeText={(text) => setInputText(text)}
-          onSubmitEditing={() =>
-            isSameLength
-              ? isSameText
-                ? handlePress(index)
-                : resetInput()
-              : null
-          }
-        />
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.scrollView}
+        onContentSizeChange={() => {
+          scrollViewRef.current.scrollToEnd({ animated: true });
+        }}
+      >
+        <View style={styles.lineContainer}>{circleLine()}</View>
+      </ScrollView>
+      <TextInput
+        style={styles.inputText}
+        placeholder="Player name"
+        value={inputText}
+        autoCapitalize="characters"
+        onChangeText={(text) => setInputText(text)}
+        onSubmitEditing={() =>
+          isSameLength ? (isSameText ? handlePress(index) : resetInput()) : null
+        }
+      />
       {/* </ImageBackground> */}
       <StatusBar style="auto" />
     </View>

@@ -36,7 +36,6 @@ export default function GuessThePlayer() {
 
   SimpleStore.get("level")
     .then((value) => {
-      console.log("Retrieved data level: ", value);
       setActualLevel(value - 1);
     })
     .catch((error) => {

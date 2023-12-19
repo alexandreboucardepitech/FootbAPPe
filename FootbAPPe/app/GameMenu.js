@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -9,16 +9,19 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import DisplayCoins from "./DisplayCoins.js"
+import DisplayCoins from "./DisplayCoins.js";
 
 import backgroundGame from "../assets/backgroundGame.jpg";
 import imageGuessThePlayer from "../assets/GuessThePlayer.png";
-import imageCarrerTracer from "../assets/CarrerTracer.png";
+import imageCareerTracer from "../assets/CareerTracer.png";
 import imageGuessPlayerName from "../assets/GuessPlayerName.png";
 import imageStarting11 from "../assets/Starting11.png";
 
 export default function GameMenu() {
   const navigation = useNavigation();
+
+  
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -47,11 +50,11 @@ export default function GameMenu() {
             <TouchableOpacity
               style={styles.imageButton}
               onPress={() => {
-                navigation.navigate("CarrerTracer", { level: -1 });
+                navigation.navigate("CareerTracer", { level: -1 });
               }}
             >
               <Image
-                source={imageCarrerTracer}
+                source={imageCareerTracer}
                 style={styles.gameLogo}
                 resizeMode="contain"
               />

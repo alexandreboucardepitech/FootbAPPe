@@ -2,35 +2,44 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
+import SimpleStore from "react-native-simple-store";
 
-export default function CarrerTracer() {
+export default function CareerTracer() {
   const route = useRoute();
   const [actualLevel, setActualLevel] = useState(route.params?.level);
 
   const idArray = [
-    165153, //Karim Benzema
+    20801, //Cristiano Ronaldo
     194765, //Antoine Griezmann
     167948, //Hugo Lloris
     183898, //Di Maria
+    213345, //Kingsley Coman
     189509, //Thiago Alcantara
     201153, //Alvaro Morata
-    245367, //Xavi Simons
     241721, //Rafael Leao
     231102, //Ludovic Blas
     210035, //Alex Grimaldo
   ];
   const stringsArray = [
-    "Karim Benzema",
+    "Cristiano Ronaldo",
     "Antoine Griezmann",
     "Hugo Lloris",
-    "Angel Di Maria",
+    "Di Maria",
+    "Kingsley Coman",
     "Thiago Alcantara",
     "Alvaro Morata",
-    "Xavi Simons",
-    "Raphaël Leao",
+    "Rafael Leao",
     "Ludovic Blas",
     "Alex Grimaldo",
   ];
+
+  SimpleStore.get("CareerTracerLevel")
+    .then((value) => {
+      setActualLevel(value - 1);
+    })
+    .catch((error) => {
+      console.log("Error retrieving data: ", error);
+    });
 
   useEffect(() => {
     setActualLevel(route.params?.level);
@@ -39,13 +48,13 @@ export default function CarrerTracer() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Carrer Tracer</Text>
+        <Text style={styles.title}>Career Tracer</Text>
       </View>
       <LevelsList
         idArray={idArray}
         stringsArray={stringsArray}
         actualLevel={actualLevel}
-        redirection={"CarrerTracerLevel"}
+        redirection={"CareerTracerLevel"}
       />
     </View>
   );
