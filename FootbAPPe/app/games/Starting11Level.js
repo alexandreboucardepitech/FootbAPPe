@@ -24,11 +24,10 @@ export default function Starting11Level() {
 
   const [player, setPlayer] = useState(null);
   const [rightPlayer, setRightPlayer] = useState([
+    [false, false, false, false, false],
+    [false],
     [false, false, false],
-    [false, false, false],
-    [false, false, false],
-    [false, false],
-    [false, false, false],
+    [false, false, false, false, false],
     [false, false, false],
     [false, false],
     [false, false, false, false, false],
@@ -37,17 +36,45 @@ export default function Starting11Level() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
   const [guesses, setGuesses] = useState([
+    [[], [], [], [], []],
+    [[]],
     [[], [], []],
-    [[], [], []],
-    [[], [], []],
-    [[], []],
-    [[], [], []],
+    [[], [], [], [], []],
     [[], [], []],
     [[], []],
     [[], [], [], [], []],
     [[]],
   ]);
   const [started, setStarted] = useState(false);
+
+  const clear = () => {
+    console.log("clear : ", team);
+    team.forEach((rows) => {
+      rows.forEach((eachPlayer) => {
+        SimpleStore.delete(`guessesLevelStarting${index}/${eachPlayer}`);
+      });
+    });
+    setRightPlayer([
+      [false, false, false, false, false],
+      [false],
+      [false, false, false],
+      [false, false, false, false, false],
+      [false, false, false],
+      [false, false],
+      [false, false, false, false, false],
+      [false],
+    ]);
+    setGuesses([
+      [[], [], [], [], []],
+      [[]],
+      [[], [], []],
+      [[], [], [], [], []],
+      [[], [], []],
+      [[], []],
+      [[], [], [], [], []],
+      [[]],
+    ]);
+  };
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -75,12 +102,11 @@ export default function Starting11Level() {
     rightPlayer.forEach((row) => {
       row.forEach((value) => {
         if (value === true) {
-          count ++;
+          count++;
         }
-      })
+      });
     });
-    if (count == 11)
-      return true;
+    if (count == 11) return true;
     return false;
   };
 
@@ -119,7 +145,6 @@ export default function Starting11Level() {
       rows.forEach((eachPlayer, columnIndex) => {
         SimpleStore.get(`guessesLevelStarting${index}/${eachPlayer}`)
           .then((value) => {
-            console.log("aaa");
             if (value) {
               console.log("values : ", value);
               let guessesCopy = guesses;
@@ -156,8 +181,7 @@ export default function Starting11Level() {
 
   useEffect(() => {
     updateAllGuesses();
-    console.log("aaaaa");
-  }, [guesses, rightPlayer, refreshTrigger]);
+  }, [guesses, refreshTrigger]);
 
   const renderPlayers = () => {
     return (
@@ -173,7 +197,7 @@ export default function Starting11Level() {
                         height: width * 0.13,
                         width: width * 0.13,
                         borderRadius: 100,
-                        margin: width * 0.02,
+                        margin: width * 0.06,
                         alignItems: "center",
                         justifyContent: "center",
                         backgroundColor:
@@ -227,6 +251,9 @@ export default function Starting11Level() {
           >
             <Text>START</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => clear()}>
+            <Text>CLEAR</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <ImageBackground
@@ -249,6 +276,9 @@ export default function Starting11Level() {
               <Text>FINISH</Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity onPress={() => clear()}>
+            <Text>CLEAR</Text>
+          </TouchableOpacity>
         </ImageBackground>
       )}
       <StatusBar style="auto" />
