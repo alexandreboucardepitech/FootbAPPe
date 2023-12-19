@@ -46,6 +46,7 @@ const SearchPlayer = ({ visible, onClose, forceRefresh, guesses, level }) => {
   };
 
   const fetchData = () => {
+    console.log("couocu : ", level);
     console.log("request /", "http://34.163.192.106:5002");
     axios
       .get(`http://34.163.192.106:5002/api/player/${searchText}`, {
@@ -56,6 +57,7 @@ const SearchPlayer = ({ visible, onClose, forceRefresh, guesses, level }) => {
       })
       .then((response) => {
         setResponseData(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -78,6 +80,9 @@ const SearchPlayer = ({ visible, onClose, forceRefresh, guesses, level }) => {
           >
             <Text>Close Search System</Text>
           </TouchableOpacity>
+          {level.substring(0, 8) == "Starting" && <Text>Guesses :</Text>}
+          {level.substring(0, 8) == "Starting" &&
+            guesses.map((guess, indexGuess) => <Text>{guess.short_name}</Text>)}
           <TouchableOpacity style={styles.button} onPress={fetchData}>
             <Text style={styles.buttonText}> SEARCH </Text>
           </TouchableOpacity>
