@@ -11,7 +11,7 @@ export default function GuessPlayerName() {
     "MESSI",
     "BELLINGHAM",
     "ONANA",
-    "MBAPPE",
+    "HAKIMI",
     "MKHITARYAN",
     "SZOBOSZLAI",
     "PAQUETA",
@@ -21,16 +21,16 @@ export default function GuessPlayerName() {
   ];
 
   const idArray = [
-    165153, //Karim Benzema
-    194765, //Antoine Griezmann
-    167948, //Hugo Lloris
-    183898, //Di Maria
-    189509, //Thiago Alcantara
-    201153, //Alvaro Morata
-    245367, //Xavi Simons
-    241721, //Rafael Leao
-    231102, //Ludovic Blas
-    210035, //Alex Grimaldo
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
   ];
 
   useEffect(() => {

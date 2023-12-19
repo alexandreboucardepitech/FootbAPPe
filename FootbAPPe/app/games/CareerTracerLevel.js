@@ -119,7 +119,7 @@ export default function CareerTracerLevel() {
           dates: "2021-2022",
           name: "Manchester United",
         }, // manchester united
-        { logo: "/meta/team/2506/60.png", dates: "2023-now", name: "AL-Nassr" }, // al nasser
+        { logo: "/meta/team/2506/60.png", dates: "2023-now", name: "Al-Nassr" }, // al nasser
       ],
     },
     {
