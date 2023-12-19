@@ -22,6 +22,7 @@ export default function GuessPlayerNameLevel() {
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
+  const actualLevel = route.params?.actualLevel;
 
   const [inputText, setInputText] = useState("");
   const [nameProposition, setNameProposition] = useState([]);
@@ -127,6 +128,12 @@ export default function GuessPlayerNameLevel() {
     SimpleStore.save("coins", coins + 1).catch((error) => {
       console.log("Error saving data: ", error);
     });
+    console.log("level : ", level, " / actual : ", actualLevel);
+    if (level >= actualLevel) {
+      SimpleStore.save("GuessPlayerNameLevel", level).catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    }
     navigation.navigate("GuessPlayerName", { level: level - 1 });
   };
 
@@ -142,8 +149,7 @@ export default function GuessPlayerNameLevel() {
         setCoins(value);
       }
     });
-    SimpleStore.get(`GuessPlayerName${index}`)
-    .then((value) => {
+    SimpleStore.get(`GuessPlayerName${index}`).then((value) => {
       console.log("récupéré : ", value);
       if (value) {
         setNameProposition(value);
@@ -152,7 +158,7 @@ export default function GuessPlayerNameLevel() {
           setWon(true);
         }
       }
-    })
+    });
   }, [route.params?.text]);
 
   return (

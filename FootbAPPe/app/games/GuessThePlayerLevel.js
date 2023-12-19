@@ -26,6 +26,7 @@ export default function GuessPlayerNameLevel() {
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
+  const actualLevel = route.params?.actualLevel;
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -40,12 +41,12 @@ export default function GuessPlayerNameLevel() {
     SimpleStore.save("coins", coins + 1).catch((error) => {
       console.log("Error saving data: ", error);
     });
-    SimpleStore.save("level", level).catch((error) => {
-      console.log("Error saving data: ", error);
-    });
-    SimpleStore.save("level", level).catch((error) => {
-      console.log("Error saving data: ", error);
-    });
+    console.log("level : ", level, "actual: ", actualLevel);
+    if (level >= actualLevel) {
+      SimpleStore.save("level", level).catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    }
     navigation.navigate("GuessThePlayer", { level: level - 1 });
   };
 

@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
 import DisplayCoins from "../DisplayCoins.js";
+import SimpleStore from "react-native-simple-store";
 
 export default function GuessPlayerName() {
   const route = useRoute();
@@ -33,6 +34,14 @@ export default function GuessPlayerName() {
     0,
     0,
   ];
+
+  SimpleStore.get("GuessPlayerNameLevel")
+    .then((value) => {
+      setActualLevel(value - 1);
+    })
+    .catch((error) => {
+      console.log("Error retrieving data: ", error);
+    });
 
   useEffect(() => {
     setActualLevel(route.params?.level);

@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
 import DisplayCoins from "../DisplayCoins.js";
+import SimpleStore from "react-native-simple-store";
 
 export default function Starting11() {
   const route = useRoute();
@@ -121,6 +122,14 @@ export default function Starting11() {
       "PSV Eindhoven",
       "FC Nantes",
   ];
+
+  SimpleStore.get("Starting11Level")
+    .then((value) => {
+      setActualLevel(value - 1);
+    })
+    .catch((error) => {
+      console.log("Error retrieving data: ", error);
+    });
 
   useEffect(() => {
     setActualLevel(route.params?.level);

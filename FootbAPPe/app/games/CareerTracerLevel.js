@@ -21,6 +21,7 @@ export default function CareerTracerLevel() {
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
+  const actualLevel = route.params?.actualLevel;
 
   const [playerCareer, setPlayerCareer] = useState(null);
   const [progression, setProgression] = useState(1);
@@ -38,9 +39,11 @@ export default function CareerTracerLevel() {
     SimpleStore.save("coins", coins + 1).catch((error) => {
       console.log("Error saving data: ", error);
     });
-    SimpleStore.save("CareerTracerLevel", level).catch((error) => {
-      console.log("Error saving data: ", error);
-    });
+    if (level >= actualLevel) {
+      SimpleStore.save("CareerTracerLevel", level).catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    }
     navigation.navigate("CareerTracer", { level: level - 1 });
   };
 

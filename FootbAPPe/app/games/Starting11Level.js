@@ -22,6 +22,7 @@ export default function Starting11Level() {
 
   const index = route.params?.index + 1;
   const team = route.params?.text;
+  const actualLevel = route.params?.actualLevel;
 
   const [player, setPlayer] = useState(null);
   const [rightPlayer, setRightPlayer] = useState([
@@ -86,6 +87,11 @@ export default function Starting11Level() {
     SimpleStore.save("coins", coins + 1).catch((error) => {
       console.log("Error saving data: ", error);
     });
+    if (level >= actualLevel) {
+      SimpleStore.save("Starting11Level", level).catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    }
     navigation.navigate("Starting11", { level: level - 1 });
   };
 
@@ -258,7 +264,7 @@ export default function Starting11Level() {
           }\n`}</Text>
           <TouchableOpacity
             onPress={() => setStarted(true)}
-            key={`finishButton-${index}`}
+            key={`startButton-${index}`}
             style={styles.touchableOpacity}
           >
             <Text>START</Text>
