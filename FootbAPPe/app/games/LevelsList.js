@@ -13,9 +13,9 @@ const LevelsList = ({ stringsArray, idArray, actualLevel, redirection }) => {
   const navigation = useNavigation();
 
   const handlePress = (text, index) => {
-    // if (index <= actualLevel + 1) {
+    if (index <= actualLevel + 1) {
       navigation.navigate(redirection, { text: text, index: index });
-    // }
+    }
   };
 
   return (
