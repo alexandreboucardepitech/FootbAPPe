@@ -9,10 +9,9 @@ import {
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import { ScrollView } from "react-native-gesture-handler";
-import { NGROK_URL } from "@env";
 import axios from "axios";
 import SimpleStore from "react-native-simple-store";
-import DisplayCoins from "../DisplayCoins.js"
+import DisplayCoins from "../DisplayCoins.js";
 
 export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
@@ -26,6 +25,7 @@ export default function GuessPlayerNameLevel() {
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
+  const actualLevel = route.params?.actualLevel;
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -37,17 +37,14 @@ export default function GuessPlayerNameLevel() {
   };
 
   const handlePress = (level) => {
-    SimpleStore.save("coins", coins + 1)
-      .catch((error) => {
-        console.log("Error saving data: ", error);
-      });
-    SimpleStore.save("level", level)
-      .catch((error) => {
-        console.log("Error saving data: ", error);
-      });
-    SimpleStore.save("level", level).catch((error) => {
+    SimpleStore.save("coins", coins + 1).catch((error) => {
       console.log("Error saving data: ", error);
     });
+    if (level >= actualLevel) {
+      SimpleStore.save("level", level).catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    }
     navigation.navigate("GuessThePlayer", { level: level - 1 });
   };
 
@@ -71,12 +68,11 @@ export default function GuessPlayerNameLevel() {
 
   useEffect(() => {
     getPlayerToGuess(route.params?.text);
-    SimpleStore.get("coins")
-    .then((value) => {
-      console.log("Retrieved datadela: ", value);
-      if (value)
+    SimpleStore.get("coins").then((value) => {
+      if (value) {
         setCoins(value);
-    })
+      }
+    });
   }, [route.params?.text]);
 
   useEffect(() => {
@@ -183,7 +179,7 @@ export default function GuessPlayerNameLevel() {
         <SearchPlayer
           forceRefresh={forceRefresh}
           guesses={guesses}
-          level={index}
+          level={`${index}`}
           visible={isModalVisible}
           onClose={toggleModal}
         />

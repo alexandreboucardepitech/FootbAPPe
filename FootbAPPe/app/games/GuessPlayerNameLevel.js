@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -6,26 +6,29 @@ import {
   View,
   TextInput,
   ScrollView,
-  ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
-
-import backgroundGame from "../../assets/backgroundGame.jpg";
+import SimpleStore from "react-native-simple-store";
+import DisplayCoins from "../DisplayCoins.js";
 
 export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const scrollViewRef = useRef(null); // Create a ref for ScrollView
+  const scrollViewRef = useRef(null);
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
+  const actualLevel = route.params?.actualLevel;
 
   const [inputText, setInputText] = useState("");
   const [nameProposition, setNameProposition] = useState([]);
   const isSameLength = player.length === inputText.length;
   const isSameText = player === inputText;
   const [nbLineOfCircles, setNbLineOfCircles] = useState(1);
+  const [coins, setCoins] = useState(0);
+  const [won, setWon] = useState(false);
 
   const circles = Array.from(
     { length: player.length },
@@ -100,10 +103,12 @@ export default function GuessPlayerNameLevel() {
     }
   };
 
-  const resetInput = () => {
+  const resetInput = (playerWon) => {
     setNameProposition((prev) => [...prev, inputText]);
     setInputText("");
-    setNbLineOfCircles((prev) => prev + 1);
+    if (!playerWon) {
+      setNbLineOfCircles((prev) => prev + 1);
+    }
 
     // Scroll to the bottom after adding a new line
     if (scrollViewRef.current) {
@@ -112,16 +117,50 @@ export default function GuessPlayerNameLevel() {
   };
 
   const handlePress = (level) => {
+    SimpleStore.save(`GuessPlayerName${level}`, nameProposition).catch(
+      (error) => {
+        console.log("Error saving data: ", error);
+      }
+    );
+    SimpleStore.save("coins", coins + 1).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
+    if (level >= actualLevel) {
+      SimpleStore.save("GuessPlayerNameLevel", level).catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    }
     navigation.navigate("GuessPlayerName", { level: level - 1 });
   };
 
+  const haveWon = () => {
+    setWon(true);
+    resetInput(true);
+  };
+
+  useEffect(() => {
+    SimpleStore.get("coins").then((value) => {
+      if (value) {
+        setCoins(value);
+      }
+    });
+    SimpleStore.get(`GuessPlayerName${index}`).then((value) => {
+      if (value) {
+        setNameProposition(value);
+        setNbLineOfCircles(value.length);
+        if (value[value.length - 1] === player) {
+          setWon(true);
+        }
+      }
+    });
+  }, [route.params?.text]);
+
   return (
     <View style={styles.container}>
-      {/* <ImageBackground
-        source={backgroundGame}
-        resizeMode="cover"
-        style={styles.image}
-      > */}
+      <DisplayCoins></DisplayCoins>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>{`Guess Player Name : Level ${index}`}</Text>
+      </View>
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
@@ -131,17 +170,27 @@ export default function GuessPlayerNameLevel() {
       >
         <View style={styles.lineContainer}>{circleLine()}</View>
       </ScrollView>
-      <TextInput
-        style={styles.inputText}
-        placeholder="Player name"
-        value={inputText}
-        autoCapitalize="characters"
-        onChangeText={(text) => setInputText(text)}
-        onSubmitEditing={() =>
-          isSameLength ? (isSameText ? handlePress(index) : resetInput()) : null
-        }
-      />
-      {/* </ImageBackground> */}
+      {!won && (
+        <TextInput
+          style={styles.inputText}
+          placeholder="Player name"
+          value={inputText}
+          autoCapitalize="characters"
+          onChangeText={(text) => setInputText(text)}
+          onSubmitEditing={() =>
+            isSameLength ? (isSameText ? haveWon() : resetInput(false)) : null
+          }
+        />
+      )}
+      {won && (
+        <TouchableOpacity
+          key={`finishButton-${index}`}
+          style={styles.touchableOpacity}
+          onPress={() => handlePress(index)}
+        >
+          <Text>FINISH</Text>
+        </TouchableOpacity>
+      )}
       <StatusBar style="auto" />
     </View>
   );
@@ -156,6 +205,14 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "center",
+  },
+  titleContainer: {
+    alignItems: "center",
+    marginTop: 60,
+  },
+  title: {
+    fontSize: 20,
+    color: "white",
   },
   scrollView: {
     marginTop: "33%",
@@ -194,5 +251,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderRadius: 10,
     marginHorizontal: 40,
+  },
+  touchableOpacity: {
+    backgroundColor: "#B3EFB2",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    height: 50,
+    marginBottom: 50,
   },
 });

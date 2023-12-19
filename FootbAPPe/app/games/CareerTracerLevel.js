@@ -11,8 +11,8 @@ import {
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SimpleStore from "react-native-simple-store";
 import SearchPlayer from "./SearchPlayer.js";
-import { NGROK_URL } from "@env";
 import axios from "axios";
+import DisplayCoins from "../DisplayCoins.js";
 
 export default function CareerTracerLevel() {
   const navigation = useNavigation();
@@ -20,6 +20,7 @@ export default function CareerTracerLevel() {
 
   const index = route.params?.index + 1;
   const player = route.params?.text;
+  const actualLevel = route.params?.actualLevel;
 
   const [playerCareer, setPlayerCareer] = useState(null);
   const [progression, setProgression] = useState(1);
@@ -27,15 +28,21 @@ export default function CareerTracerLevel() {
   const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
   const [playerToGuess, setPlayerToGuess] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [coins, setCoins] = useState(0);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
   const handlePress = (level) => {
-    SimpleStore.save("CareerTracerLevel", level).catch((error) => {
+    SimpleStore.save("coins", coins + 1).catch((error) => {
       console.log("Error saving data: ", error);
     });
+    if (level >= actualLevel) {
+      SimpleStore.save("CareerTracerLevel", level).catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    }
     navigation.navigate("CareerTracer", { level: level - 1 });
   };
 
@@ -119,7 +126,7 @@ export default function CareerTracerLevel() {
           dates: "2021-2022",
           name: "Manchester United",
         }, // manchester united
-        { logo: "/meta/team/2506/60.png", dates: "2023-now", name: "AL-Nassr" }, // al nasser
+        { logo: "/meta/team/2506/60.png", dates: "2023-now", name: "Al-Nassr" }, // al nasser
       ],
     },
     {
@@ -341,6 +348,11 @@ export default function CareerTracerLevel() {
 
   useEffect(() => {
     setPlayerCareer(getplayerCareer());
+    SimpleStore.get("coins").then((value) => {
+      if (value) {
+        setCoins(value);
+      }
+    });
   }, [route.params?.level]);
 
   const getCircleColor = (playerPos, guessPos) => {
@@ -423,6 +435,7 @@ export default function CareerTracerLevel() {
 
   return (
     <View style={styles.container}>
+      <DisplayCoins></DisplayCoins>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{`Career Tracer : Level ${index}`}</Text>
       </View>
@@ -505,7 +518,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: "center",
-    marginTop: 20, // Reduce top margin for title
+    marginTop: 50, // Reduce top margin for title
   },
   title: {
     fontSize: 24, // Adjust title font size

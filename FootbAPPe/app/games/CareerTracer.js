@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
 import SimpleStore from "react-native-simple-store";
+import DisplayCoins from "../DisplayCoins";
 
 export default function CareerTracer() {
   const route = useRoute();
@@ -47,6 +48,7 @@ export default function CareerTracer() {
 
   return (
     <View style={styles.container}>
+      <DisplayCoins></DisplayCoins>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Career Tracer</Text>
       </View>

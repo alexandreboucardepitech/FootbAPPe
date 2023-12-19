@@ -12,6 +12,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import backgroundGame from "../../assets/backgroundGame.jpg";
 import SimpleStore from "react-native-simple-store";
+import DisplayCoins from "../DisplayCoins.js";
 
 const { width, height } = Dimensions.get("window");
 
@@ -21,14 +22,14 @@ export default function Starting11Level() {
 
   const index = route.params?.index + 1;
   const team = route.params?.text;
+  const actualLevel = route.params?.actualLevel;
 
   const [player, setPlayer] = useState(null);
   const [rightPlayer, setRightPlayer] = useState([
+    [false, false, false, false, false],
+    [false],
     [false, false, false],
-    [false, false, false],
-    [false, false, false],
-    [false, false],
-    [false, false, false],
+    [false, false, false, false, false],
     [false, false, false],
     [false, false],
     [false, false, false, false, false],
@@ -37,23 +38,59 @@ export default function Starting11Level() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(Date.now());
   const [guesses, setGuesses] = useState([
+    [[], [], [], [], []],
+    [[]],
     [[], [], []],
-    [[], [], []],
-    [[], [], []],
-    [[], []],
-    [[], [], []],
+    [[], [], [], [], []],
     [[], [], []],
     [[], []],
     [[], [], [], [], []],
     [[]],
   ]);
   const [started, setStarted] = useState(false);
+  const [coins, setCoins] = useState(0);
+
+  const clear = () => {
+    team.forEach((rows) => {
+      rows.forEach((eachPlayer) => {
+        SimpleStore.delete(`guessesLevelStarting${index}/${eachPlayer}`);
+      });
+    });
+    setRightPlayer([
+      [false, false, false, false, false],
+      [false],
+      [false, false, false],
+      [false, false, false, false, false],
+      [false, false, false],
+      [false, false],
+      [false, false, false, false, false],
+      [false],
+    ]);
+    setGuesses([
+      [[], [], [], [], []],
+      [[]],
+      [[], [], []],
+      [[], [], [], [], []],
+      [[], [], []],
+      [[], []],
+      [[], [], [], [], []],
+      [[]],
+    ]);
+  };
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
   const handlePress = (level) => {
+    SimpleStore.save("coins", coins + 1).catch((error) => {
+      console.log("Error saving data: ", error);
+    });
+    if (level >= actualLevel) {
+      SimpleStore.save("Starting11Level", level).catch((error) => {
+        console.log("Error saving data: ", error);
+      });
+    }
     navigation.navigate("Starting11", { level: level - 1 });
   };
 
@@ -75,17 +112,15 @@ export default function Starting11Level() {
     rightPlayer.forEach((row) => {
       row.forEach((value) => {
         if (value === true) {
-          count ++;
+          count++;
         }
-      })
+      });
     });
-    if (count == 11)
-      return true;
+    if (count == 11) return true;
     return false;
   };
 
   const openModal = (rowIndex, index) => {
-    console.log("here :", team[rowIndex][index]);
     setPlayer(team[rowIndex][index]);
 
     let found = false;
@@ -119,9 +154,7 @@ export default function Starting11Level() {
       rows.forEach((eachPlayer, columnIndex) => {
         SimpleStore.get(`guessesLevelStarting${index}/${eachPlayer}`)
           .then((value) => {
-            console.log("aaa");
             if (value) {
-              console.log("values : ", value);
               let guessesCopy = guesses;
               guessesCopy[rowIndex][columnIndex] = value;
               setGuesses(guessesCopy);
@@ -131,7 +164,6 @@ export default function Starting11Level() {
                   let rightPlayersCopy = rightPlayer;
                   rightPlayersCopy[rowIndex][columnIndex] = true;
                   setRightPlayer(rightPlayersCopy);
-                  console.log("rightcopy : ", rightPlayersCopy);
                 }
               });
 
@@ -142,9 +174,7 @@ export default function Starting11Level() {
                 let rightPlayersCopy = rightPlayer;
                 rightPlayersCopy[rowIndex][columnIndex] = true;
                 setRightPlayer(rightPlayersCopy);
-                console.log("rightcopy : ", rightPlayersCopy);
               }
-              console.log("rightplayer : ", rightPlayer);
             }
           })
           .catch((error) => {
@@ -156,8 +186,12 @@ export default function Starting11Level() {
 
   useEffect(() => {
     updateAllGuesses();
-    console.log("aaaaa");
-  }, [guesses, rightPlayer, refreshTrigger]);
+    SimpleStore.get("coins").then((value) => {
+      if (value) {
+        setCoins(value);
+      }
+    });
+  }, [guesses, refreshTrigger]);
 
   const renderPlayers = () => {
     return (
@@ -170,10 +204,11 @@ export default function Starting11Level() {
                   <View>
                     <TouchableOpacity
                       style={{
+                        key:`box${rowIndex}/${index}`,
                         height: width * 0.13,
                         width: width * 0.13,
                         borderRadius: 100,
-                        margin: width * 0.02,
+                        margin: width * 0.06,
                         alignItems: "center",
                         justifyContent: "center",
                         backgroundColor:
@@ -217,15 +252,19 @@ export default function Starting11Level() {
     <View style={styles.container}>
       {!started ? (
         <View style={styles.startTitleContainer}>
+          <DisplayCoins key={"Starting11Title"}></DisplayCoins>
           <Text style={styles.startTitle}>{`Level ${index} : ${
             levels[index - 1]
           }\n`}</Text>
           <TouchableOpacity
             onPress={() => setStarted(true)}
-            key={`finishButton-${index}`}
+            key={`startButton-${index}`}
             style={styles.touchableOpacity}
           >
             <Text>START</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => clear()}>
+            <Text>CLEAR</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -234,6 +273,7 @@ export default function Starting11Level() {
           resizeMode="cover"
           style={styles.image}
         >
+          <DisplayCoins key={"Starting11"}></DisplayCoins>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{`Level ${index} : ${
               levels[index - 1]
@@ -249,6 +289,9 @@ export default function Starting11Level() {
               <Text>FINISH</Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity onPress={() => clear()}>
+            <Text>CLEAR</Text>
+          </TouchableOpacity>
         </ImageBackground>
       )}
       <StatusBar style="auto" />
@@ -262,10 +305,10 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 50,
   },
   title: {
-    fontSize: 24, // Adjust title font size
+    fontSize: 24,
     color: "white",
     marginBottom: 20,
   },

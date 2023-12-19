@@ -3,6 +3,8 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import LevelsList from "./LevelsList.js";
 import { useRoute } from "@react-navigation/native";
+import DisplayCoins from "../DisplayCoins.js";
+import SimpleStore from "react-native-simple-store";
 
 export default function GuessPlayerName() {
   const route = useRoute();
@@ -11,7 +13,7 @@ export default function GuessPlayerName() {
     "MESSI",
     "BELLINGHAM",
     "ONANA",
-    "MBAPPE",
+    "HAKIMI",
     "MKHITARYAN",
     "SZOBOSZLAI",
     "PAQUETA",
@@ -21,17 +23,25 @@ export default function GuessPlayerName() {
   ];
 
   const idArray = [
-    165153, //Karim Benzema
-    194765, //Antoine Griezmann
-    167948, //Hugo Lloris
-    183898, //Di Maria
-    189509, //Thiago Alcantara
-    201153, //Alvaro Morata
-    245367, //Xavi Simons
-    241721, //Rafael Leao
-    231102, //Ludovic Blas
-    210035, //Alex Grimaldo
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
   ];
+
+  SimpleStore.get("GuessPlayerNameLevel")
+    .then((value) => {
+      setActualLevel(value - 1);
+    })
+    .catch((error) => {
+      console.log("Error retrieving data: ", error);
+    });
 
   useEffect(() => {
     setActualLevel(route.params?.level);
@@ -39,6 +49,7 @@ export default function GuessPlayerName() {
 
   return (
     <View style={styles.container}>
+      <DisplayCoins></DisplayCoins>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Guess Player Name</Text>
       </View>
