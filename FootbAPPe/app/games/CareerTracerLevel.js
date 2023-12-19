@@ -11,7 +11,6 @@ import {
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SimpleStore from "react-native-simple-store";
 import SearchPlayer from "./SearchPlayer.js";
-import { NGROK_URL } from "@env";
 import axios from "axios";
 import DisplayCoins from "../DisplayCoins.js";
 

@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import SimpleStore from "react-native-simple-store";
 import axios from "axios";
-import { NGROK_URL } from "@env";
 import not_found from "../../assets/not_found.png";
 import { StatusBar } from "expo-status-bar";
 

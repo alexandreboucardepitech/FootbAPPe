@@ -204,6 +204,7 @@ export default function Starting11Level() {
                   <View>
                     <TouchableOpacity
                       style={{
+                        key:`box${rowIndex}/${index}`,
                         height: width * 0.13,
                         width: width * 0.13,
                         borderRadius: 100,

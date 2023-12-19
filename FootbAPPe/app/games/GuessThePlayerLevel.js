@@ -9,7 +9,6 @@ import {
 import { useRoute, useNavigation } from "@react-navigation/native";
 import SearchPlayer from "./SearchPlayer.js";
 import { ScrollView } from "react-native-gesture-handler";
-import { NGROK_URL } from "@env";
 import axios from "axios";
 import SimpleStore from "react-native-simple-store";
 import DisplayCoins from "../DisplayCoins.js";

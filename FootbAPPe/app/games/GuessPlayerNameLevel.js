@@ -12,8 +12,6 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import SimpleStore from "react-native-simple-store";
 import DisplayCoins from "../DisplayCoins.js";
 
-import backgroundGame from "../../assets/backgroundGame.jpg";
-
 export default function GuessPlayerNameLevel() {
   const navigation = useNavigation();
   const route = useRoute();
